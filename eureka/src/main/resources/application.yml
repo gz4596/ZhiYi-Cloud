@@ -1,0 +1,22 @@
+server:
+  port: 8848
+spring:
+  application:
+    name: eureka
+  security:
+    user:
+      name: eureka
+      password: password
+
+eureka:
+  instance:
+    hostname: eureka-server # 应用的主机名称
+  client:
+    registerWithEureka: true # 值为false意味着自身仅作为服务器，不作为客户端
+    fetchRegistry: true # 值为false意味着无需注册自身
+    serviceUrl:
+      # 指明了应用的URL, 如果有多个,用逗号隔开
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    # 当 eureka server启动的时候，不能从对等节点获取instance注册信息的情况，应等待多长时间。
+    wait-time-in-ms-when-sync-empty: 0

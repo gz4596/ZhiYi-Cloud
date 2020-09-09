@@ -1,0 +1,23 @@
+server:
+  port: 6628
+
+spring:
+  thymeleaf:
+    cache: false
+  application:
+    name: auth
+  datasource:
+    initialization-mode: never
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/taox?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+  security:
+    user:
+      name: auth
+      password: password
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@eureka-server:8848/eureka/
+
