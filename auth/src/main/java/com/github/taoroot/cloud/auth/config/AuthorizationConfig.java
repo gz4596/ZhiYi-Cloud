@@ -22,7 +22,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
-    @Autowired(required = false)
+    @Autowired
     private UserDetailsService userDetailsService;
 
     /**
@@ -42,7 +42,8 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         // @formatter:off
         clients.inMemory()
                 .withClient("client")
-                    .authorizedGrantTypes("password", "refresh_token")
+                    .authorizedGrantTypes("password", "refresh_token", "authorization_code")
+                    .scopes("all")
                     .secret("{noop}secret"); // 密码不加密
         // @formatter:on
     }

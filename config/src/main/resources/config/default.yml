@@ -5,3 +5,11 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
 #    org.springframework.boot.autoconfigure: DEBUG
+
+spring:
+  security:
+    ignore:
+      urls[0]:
+        - /swagger-ui.html
+        - /v2/**
+        - /swagger-resources/**

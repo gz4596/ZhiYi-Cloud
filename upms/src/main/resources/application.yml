@@ -12,7 +12,7 @@ logging:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://register-server:8848/eureka/
+      defaultZone: http://eureka:password@eureka-server:8848/eureka/
 
 spring:
   application:
@@ -22,7 +22,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root
-    url: jdbc:mysql://127.0.0.1:3306/zhiyi-cloud?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://127.0.0.1:3306/zhiyi-cloud-upms?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
@@ -34,3 +34,11 @@ mybatis-plus:
     cache-enabled: false
     map-underscore-to-camel-case: true
     default-enum-type-handler: com.baomidou.mybatisplus.extension.handlers.MybatisEnumTypeHandler
+security:
+  oauth2:
+    resource:
+      id: upms
+      token-info-uri: http://auth/oauth/check_token
+    client:
+      client-id: client
+      client-secret: secret
