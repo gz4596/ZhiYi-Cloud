@@ -30,11 +30,8 @@ public class WebSecurityPermitAllConfig extends WebSecurityConfigurerAdapter {
      */
     protected void configure(HttpSecurity http) throws Exception {
 
-        List<String> permitAllUrls = new ArrayList<>(Arrays.asList(
-                "/actuator/**",
-                "/v2/api-docs",
-                "/webjars/**")
-        );
+        List<String> permitAllUrls = new ArrayList<>(Arrays.asList("/actuator/**",
+                "/v2/api-docs", "/webjars/**"));
 
         securityIgnoreProperties.getUrls().forEach(permitAllUrls::addAll);
 
@@ -45,6 +42,7 @@ public class WebSecurityPermitAllConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers()
                     .antMatchers(permitAllUrls.toArray(new String[0]))
                     .and()
+                .csrf().disable()
                 .authorizeRequests().anyRequest().permitAll();
         // @formatter:on
     }

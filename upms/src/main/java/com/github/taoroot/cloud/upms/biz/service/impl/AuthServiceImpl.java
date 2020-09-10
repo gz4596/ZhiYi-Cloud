@@ -1,7 +1,9 @@
 package com.github.taoroot.cloud.upms.biz.service.impl;
 
+import cn.hutool.core.lang.tree.TreeUtil;
 import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.utils.TreeUtils;
+import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.upms.api.entity.UpmsAuthority;
 import com.github.taoroot.cloud.upms.api.entity.UpmsUser;
@@ -11,9 +13,11 @@ import com.github.taoroot.cloud.upms.biz.mapper.UserOauth2Mapper;
 import com.github.taoroot.cloud.upms.biz.mapper.UserRoleMapper;
 import com.github.taoroot.cloud.upms.biz.service.AuthService;
 import com.github.taoroot.cloud.upms.biz.service.UserRoleService;
-import cn.hutool.core.lang.tree.TreeUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -63,5 +67,14 @@ public class AuthServiceImpl implements AuthService {
             tree.putExtra("meta", meta);
         }));
         return R.ok(result);
+    }
+
+    @Override
+    public AuthUserInfo authByUsername(String username) {
+        AuthUserInfo userInfo = new AuthUserInfo();
+        userInfo.setUserId("1");
+        userInfo.setAuthorities(new String[]{"USER"});
+        userInfo.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("password"));
+        return userInfo;
     }
 }

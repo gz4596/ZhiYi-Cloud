@@ -38,7 +38,8 @@ public class SwaggerConfiguration {
 
     private ApiInfo groupApiInfo() {
         return new ApiInfoBuilder()
-                .title("swagger-bootstrap-ui")
+                .title("ZhiYi-Cloud")
+                .description("使用教程: https://zhiyi.zone")
                 .version("1.0")
                 .build();
     }

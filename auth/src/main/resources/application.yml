@@ -17,3 +17,9 @@ eureka:
     serviceUrl:
       defaultZone: http://eureka:password@eureka-server:8848/eureka/
 
+auth:
+  user-info:
+    route:
+      mall-admin:
+        path: http://upms/auth/user_info_by_auth
+        token: zhiyi-cloud

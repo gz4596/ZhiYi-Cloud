@@ -1,14 +1,12 @@
 package com.github.taoroot.cloud.upms.biz.web;
 
 import com.github.taoroot.cloud.common.core.utils.R;
+import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.upms.biz.service.AuthService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
 
 /**
  * @author Joe Grandja
@@ -21,16 +19,14 @@ public class AuthController {
     private final AuthService authservice;
 
     /**
-     * 特供 Resource-Server#oauth2Login 使用, 根据 token 放回用户信息
-     * todo 兼容原来的 Security OAuth 2.0
+     * 特供 Auth-Server 回调查询
+     *
+     * @param username 用户登录账号
      */
     @SneakyThrows
-    @GetMapping(value = "/check_token")
-    public HashMap<String, String> checkToken() {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("name", name);
-        return hashMap;
+    @GetMapping(value = "/auth/user_info_by_auth")
+    public AuthUserInfo authByUsername(String username, String client, String token) {
+        return authservice.authByUsername(username);
     }
 
     /**
