@@ -30,7 +30,11 @@ public class WebSecurityPermitAllConfig extends WebSecurityConfigurerAdapter {
      */
     protected void configure(HttpSecurity http) throws Exception {
 
-        List<String> permitAllUrls = new ArrayList<>(Arrays.asList("/actuator/**", "/webjars/**"));
+        List<String> permitAllUrls = new ArrayList<>(Arrays.asList(
+                "/actuator/**",
+                "/v2/api-docs",
+                "/webjars/**")
+        );
 
         securityIgnoreProperties.getUrls().forEach(permitAllUrls::addAll);
 

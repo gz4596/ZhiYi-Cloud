@@ -18,16 +18,19 @@ spring:
       discovery:
         locator:
           enabled: false # 不要自动支持,手动配置
-          lower-case-service-id: true
-          filters:
-            - PreserveHostHeader
-            - StripPrefix=1
       routes:
-        - id: upms
-          uri: lb://flizi-auth
+        - id: auth
+          uri: lb://auth
           predicates:
             - Path=/auth/**
-
+          filters:
+            - StripPrefix=1
+        - id: upms
+          uri: lb://upms
+          predicates:
+            - Path=/upms/**
+          filters:
+            - StripPrefix=1
 eureka:
   client:
     serviceUrl:

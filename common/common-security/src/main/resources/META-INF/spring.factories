@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.taoroot.cloud.common.security.config.WebSecurityPermitAllConfig
+  com.github.taoroot.cloud.common.security.config.WebSecurityPermitAllConfig, \
+  com.github.taoroot.cloud.common.security.config.ResourceServerConfig
+

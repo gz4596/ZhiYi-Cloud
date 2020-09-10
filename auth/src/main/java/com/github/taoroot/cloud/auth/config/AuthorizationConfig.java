@@ -44,7 +44,11 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 .withClient("client")
                     .authorizedGrantTypes("password", "refresh_token", "authorization_code")
                     .scopes("all")
-                    .secret("{noop}secret"); // 密码不加密
+                    .secret("{noop}secret") // 密码不加密
+                    .and()
+                .withClient("resource") // 这是一个资源服务器使用的调取check_token接口,必须携带client和secret所以只需要有账号密码就好
+                    .secret("{noop}secret")
+        ;
         // @formatter:on
     }
 

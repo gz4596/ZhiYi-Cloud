@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @Slf4j
 @Component
 @Primary
@@ -29,6 +30,13 @@ public class SwaggerResourceConfig implements SwaggerResourcesProvider {
 
     @Override
     public List<SwaggerResource> get() {
+        return getResources();
+    }
+
+    /**
+     * 通过注册注入的
+     */
+    private List<SwaggerResource> getResources() {
         List<SwaggerResource> resources = new ArrayList<>();
 
         Map<String, URI> routesMap = new HashMap<>(8);

@@ -37,8 +37,4 @@ mybatis-plus:
 security:
   oauth2:
     resource:
-      id: upms
-      token-info-uri: http://auth/oauth/check_token
-    client:
-      client-id: client
-      client-secret: secret
+      token-info-uri: http://auth/oauth/check_token # 将自动装配 RemoteTokenService
