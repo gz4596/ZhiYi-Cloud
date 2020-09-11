@@ -4,6 +4,7 @@ import com.github.taoroot.cloud.auth.service.RemoteUserDetailService;
 import com.github.taoroot.cloud.auth.util.AuthUser;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.sql.DataSource;
 import java.util.LinkedHashMap;
@@ -32,6 +34,8 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     private final DataSource dataSource;
 
+    private final RedisConnectionFactory connectionFactory;
+
     /**
      * 配置 Spring MVC Controller
      */
@@ -40,6 +44,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
         // @formatter:off
         endpoints
+                .tokenStore(new RedisTokenStore(connectionFactory))
                 .accessTokenConverter(getDefaultAccessTokenConverter()) // 个性化 check_token 返回内容
                 .userDetailsService(userDetailsService)   // refresh_token 模式,通过用户名,放回用户信息
                 .authenticationManager(authenticationManager); // password 模式, 验证密码, 返回用户登录信息

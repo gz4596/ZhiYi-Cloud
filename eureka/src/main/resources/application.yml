@@ -7,7 +7,11 @@ spring:
     user:
       name: eureka
       password: password
-
+  cloud:
+    inetutils:
+      ignored-interfaces: ## 忽略网卡
+        - VMware.*
+        - docker*
 eureka:
   instance:
     hostname: eureka-server # 应用的主机名称
