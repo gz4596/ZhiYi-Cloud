@@ -4,6 +4,7 @@ import com.github.taoroot.cloud.auth.util.AuthUser;
 import com.github.taoroot.cloud.auth.util.AuthUserServiceProperties;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,6 +25,7 @@ import java.util.Collections;
 
 @Component
 @AllArgsConstructor
+@EnableConfigurationProperties(AuthUserServiceProperties.class)
 public class RemoteUserDetailService implements UserDetailsService {
 
     final AuthUserServiceProperties authUserServiceProperties;

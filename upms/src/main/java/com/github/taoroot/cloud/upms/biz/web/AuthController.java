@@ -1,6 +1,5 @@
 package com.github.taoroot.cloud.upms.biz.web;
 
-import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.upms.biz.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -26,15 +25,9 @@ public class AuthController {
     @SneakyThrows
     @GetMapping(value = "/auth/user_info_by_auth")
     public AuthUserInfo authByUsername(String username, String client, String token) {
+        if (!"zhiyi-cloud".equals(token)) {
+            return null;
+        }
         return authservice.authByUsername(username);
-    }
-
-    /**
-     * 前端获取登录者信息
-     */
-    @SneakyThrows
-    @GetMapping(value = "/user_info")
-    public R userInfo() {
-        return authservice.userInfo();
     }
 }

@@ -2,9 +2,7 @@ package com.github.taoroot.cloud.auth.config;
 
 import com.github.taoroot.cloud.auth.service.RemoteUserDetailService;
 import com.github.taoroot.cloud.auth.util.AuthUser;
-import com.github.taoroot.cloud.auth.util.AuthUserServiceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +27,6 @@ import java.util.Map;
  */
 @Configuration
 @EnableAuthorizationServer
-@EnableConfigurationProperties(AuthUserServiceProperties.class)
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
