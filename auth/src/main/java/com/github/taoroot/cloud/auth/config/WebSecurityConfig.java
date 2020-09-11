@@ -1,11 +1,14 @@
 package com.github.taoroot.cloud.auth.config;
 
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Spring Security 配置
@@ -35,5 +38,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().and()
                 .httpBasic();
         // @formatter:on
+    }
+
+    @Bean
+    @Primary
+    @LoadBalanced
+    public RestTemplate lbRestTemplate() {
+        return new RestTemplate();
     }
 }

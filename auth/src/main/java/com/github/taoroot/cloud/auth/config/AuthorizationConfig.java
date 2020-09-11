@@ -2,11 +2,8 @@ package com.github.taoroot.cloud.auth.config;
 
 import com.github.taoroot.cloud.auth.service.RemoteUserDetailService;
 import com.github.taoroot.cloud.auth.util.AuthUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.context.annotation.Bean;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -16,7 +13,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
-import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 import java.util.LinkedHashMap;
@@ -26,25 +22,15 @@ import java.util.Map;
  * 认证服务器配置
  */
 @Configuration
+@AllArgsConstructor
 @EnableAuthorizationServer
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private RemoteUserDetailService userDetailsService;
+    private final RemoteUserDetailService userDetailsService;
 
-    @Autowired
-    private DataSource dataSource;
-
-
-    @Bean
-    @Primary
-    @LoadBalanced
-    public RestTemplate lbRestTemplate() {
-        return new RestTemplate();
-    }
+    private final DataSource dataSource;
 
     /**
      * 配置 Spring MVC Controller
