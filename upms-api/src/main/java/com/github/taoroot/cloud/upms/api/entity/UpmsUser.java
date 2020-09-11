@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class UpmsUser extends Model<UpmsUser> {
 
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private String id;
 
     private String username;
 

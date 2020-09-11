@@ -13,7 +13,7 @@ public class UpmsUserRole extends Model<UpmsUserRole> {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer userId;
+    private String userId;
 
     private Integer roleId;
 }

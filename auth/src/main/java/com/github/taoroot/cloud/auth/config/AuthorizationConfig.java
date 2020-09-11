@@ -1,36 +1,46 @@
 package com.github.taoroot.cloud.auth.config;
 
 import com.github.taoroot.cloud.auth.service.RemoteUserDetailService;
-import com.github.taoroot.cloud.auth.util.UserDetailsServiceProperties;
+import com.github.taoroot.cloud.auth.util.AuthUser;
+import com.github.taoroot.cloud.auth.util.AuthUserServiceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 import org.springframework.web.client.RestTemplate;
+
+import javax.sql.DataSource;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 认证服务器配置
  */
 @Configuration
 @EnableAuthorizationServer
-@EnableConfigurationProperties(UserDetailsServiceProperties.class)
+@EnableConfigurationProperties(AuthUserServiceProperties.class)
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private RemoteUserDetailService userDetailsService;
+
+    @Autowired
+    private DataSource dataSource;
+
 
     @Bean
     @Primary
@@ -44,8 +54,10 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+
         // @formatter:off
         endpoints
+                .accessTokenConverter(getDefaultAccessTokenConverter()) // 个性化 check_token 返回内容
                 .userDetailsService(userDetailsService)   // refresh_token 模式,通过用户名,放回用户信息
                 .authenticationManager(authenticationManager); // password 模式, 验证密码, 返回用户登录信息
         // @formatter:on
@@ -56,19 +68,8 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        // @formatter:off
-        clients.inMemory()
-                    .withClient("mall-admin")
-                    .authorizedGrantTypes("password", "refresh_token", "authorization_code")
-                    .scopes("all")
-                    .secret("{noop}secret") // 密码不加密
-                    .and()
-                .withClient("resource") // 这是一个资源服务器使用的调取check_token接口,必须携带client和secret所以只需要有账号密码就好
-                .secret("{noop}secret")
-        ;
-        // @formatter:on
+        clients.jdbc(dataSource); // jdbc 读取客户端信息
     }
-
 
     /**
      * 配置 Spring Security
@@ -78,4 +79,22 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         // check_token 接口已经被认证服务器代理, 资源服务器不会判断token存在,所以应该直接开发这个接口
         security.checkTokenAccess("permitAll()");
     }
+
+    private DefaultAccessTokenConverter getDefaultAccessTokenConverter() {
+        DefaultAccessTokenConverter defaultAccessTokenConverter = new DefaultAccessTokenConverter();
+        defaultAccessTokenConverter.setUserTokenConverter(new DefaultUserAuthenticationConverter() {
+            @Override
+            public Map<String, ?> convertUserAuthentication(Authentication authentication) {
+                Map<String, Object> response = new LinkedHashMap<>(super.convertUserAuthentication(authentication));
+                if (authentication.getPrincipal() instanceof AuthUser) {
+                    AuthUser principal = (AuthUser) authentication.getPrincipal();
+                    response.put("nickname", principal.getNickname());
+                    response.putAll(principal.getAttrs());
+                }
+                return response;
+            }
+        });
+        return defaultAccessTokenConverter;
+    }
+
 }

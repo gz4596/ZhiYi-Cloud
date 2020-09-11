@@ -18,13 +18,13 @@ import java.util.List;
  */
 public interface UserMapper extends BaseMapper<UpmsUser> {
 
-    List<Integer> roleIds(@Param("userId") Integer userId);
+    List<Integer> roleIds(@Param("userId") String userId);
 
-    List<UpmsRole> roles(@Param("userId") Integer userId);
+    List<UpmsRole> roles(@Param("userId") String userId);
 
-    List<String> roleNames(@Param("userId") Integer userId);
+    List<String> roleNames(@Param("userId") String userId);
 
-    List<UpmsAuthority> authorities(@Param("userId") Integer userId, @Param("type") Integer type);
+    List<UpmsAuthority> authorities(@Param("userId") String userId, @Param("type") Integer type);
 
     List<String> authorityNames(@Param("userId") Integer userId, @Param("type") Integer type);
 

@@ -26,9 +26,6 @@ spring:
   security:
     ignore:
       urls[0]:
-        - /swagger-ui.html
-        - /v2/**
-        - /swagger-resources/**
         - /auth/user_info_by_auth
 
 mybatis-plus:

@@ -1,10 +1,10 @@
 package com.github.taoroot.cloud.upms.biz.service.impl;
 
 import cn.hutool.core.lang.tree.TreeUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.utils.TreeUtils;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
-import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.upms.api.entity.UpmsAuthority;
 import com.github.taoroot.cloud.upms.api.entity.UpmsUser;
 import com.github.taoroot.cloud.upms.biz.mapper.DeptMapper;
@@ -15,9 +15,6 @@ import com.github.taoroot.cloud.upms.biz.service.AuthService;
 import com.github.taoroot.cloud.upms.biz.service.UserRoleService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -36,20 +33,26 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public R userInfo() {
-        Integer userId = SecurityUtils.userId();
         HashMap<String, Object> result = new HashMap<>();
-        UpmsUser upmsUser = userMapper.selectById(SecurityUtils.userId());
-        // 查询用户个人信息
-        result.put("info", upmsUser);
-        // 查询用户角色信息
-        result.put("roles", userMapper.roles(userId));
-        // 所属部门
-        result.put("dept", deptMapper.selectById(upmsUser.getDeptId()).getName());
-        // 功能: 1
-        result.put("functions", userMapper.authorities(userId, 1));
-        // 菜单: 0
+        return R.ok(result);
+    }
+
+    @Override
+    public AuthUserInfo authByUsername(String username) {
+        UpmsUser upmsUser = userMapper.selectOne(Wrappers.<UpmsUser>lambdaQuery().eq(UpmsUser::getUsername, username));
+
+        if (upmsUser == null) {
+            return null;
+        }
+        String userId = upmsUser.getId();
+
+        AuthUserInfo userInfo = new AuthUserInfo();
+        userInfo.setUsername(upmsUser.getId());
+        userInfo.setPassword(upmsUser.getPassword());
+        userInfo.setAuthorities(userMapper.roleNames(userId).toArray(new String[0]));
         List<UpmsAuthority> menus = userMapper.authorities(userId, 0);
-        result.put("menus", TreeUtil.build(menus, TreeUtils.ROOT_PARENT_ID, (treeNode, tree) -> {
+
+        userInfo.getAttrs().put("menus", TreeUtil.build(menus, TreeUtils.ROOT_PARENT_ID, (treeNode, tree) -> {
             tree.setId(treeNode.getId());
             tree.setParentId(treeNode.getParentId());
             tree.setWeight(treeNode.getWeight());
@@ -66,15 +69,7 @@ public class AuthServiceImpl implements AuthService {
             meta.put("breadcrumb", treeNode.getBreadcrumb());
             tree.putExtra("meta", meta);
         }));
-        return R.ok(result);
-    }
 
-    @Override
-    public AuthUserInfo authByUsername(String username) {
-        AuthUserInfo userInfo = new AuthUserInfo();
-        userInfo.setUserId("1");
-        userInfo.setAuthorities(new String[]{"USER"});
-        userInfo.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("password"));
         return userInfo;
     }
 }

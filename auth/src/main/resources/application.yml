@@ -7,7 +7,7 @@ spring:
   application:
     name: auth
   datasource:
-    initialization-mode: never
+    initialization-mode: always
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root
