@@ -1,5 +1,6 @@
 package com.github.taoroot.cloud.common.security.config;
 
+import com.github.taoroot.cloud.common.security.oauth.AuthUserAuthenticationConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -10,6 +11,8 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -46,9 +49,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        remoteTokenServices.setRestTemplate(lbRestTemplate());
         remoteTokenServices.setClientId("resource");
         remoteTokenServices.setClientSecret("secret");
+        remoteTokenServices.setRestTemplate(lbRestTemplate());
+
+        DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
+        tokenConverter.setUserTokenConverter(new AuthUserAuthenticationConverter());
+        remoteTokenServices.setAccessTokenConverter(tokenConverter);
         resources.tokenServices(remoteTokenServices);
     }
 }

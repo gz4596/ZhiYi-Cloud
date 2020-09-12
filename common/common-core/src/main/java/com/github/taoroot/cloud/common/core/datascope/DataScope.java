@@ -1,6 +1,8 @@
 package com.github.taoroot.cloud.common.core.datascope;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,6 +10,12 @@ import java.util.List;
 
 @Data
 public class DataScope implements Serializable {
+    /**
+     * sql
+     */
+    @Setter
+    @Getter
+    static String sql = "SELECT ur.scope_type, ur.scope FROM upms_role ur where ur.id IN (?) order by scope_type desc limit 1";
     /**
      * 限制范围为部门时字段名称
      */
@@ -30,7 +38,7 @@ public class DataScope implements Serializable {
     /**
      * 基于角色
      */
-    private List<String> roleIds = new ArrayList<>();
+    private List<Integer> roleIds = new ArrayList<>();
 
     /**
      * 默认查询所有

@@ -1,17 +1,18 @@
 package com.github.taoroot.cloud.upms.biz.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.taoroot.cloud.common.core.datascope.DataScope;
 import com.github.taoroot.cloud.common.core.utils.R;
+import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.upms.api.entity.UpmsUser;
 import com.github.taoroot.cloud.upms.api.entity.UpmsUserRole;
 import com.github.taoroot.cloud.upms.biz.mapper.UserMapper;
 import com.github.taoroot.cloud.upms.biz.mapper.UserRoleMapper;
 import com.github.taoroot.cloud.upms.biz.service.UserRoleService;
 import com.github.taoroot.cloud.upms.biz.service.UserService;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UpmsUser> implement
 
     @Override
     public R getPage(Page<UpmsUser> page, String username, String phone, Integer deptId, Boolean enabled) {
-        DataScope dataScope = new DataScope();
+        DataScope dataScope = SecurityUtils.dataScope();
         dataScope.setScopeOwnName("id");
         IPage<UpmsUser> result = userMapper.getPage(page, dataScope, username, phone, deptId, enabled);
         return R.ok(result);

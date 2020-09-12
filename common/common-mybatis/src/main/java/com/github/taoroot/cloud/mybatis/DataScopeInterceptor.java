@@ -1,13 +1,13 @@
 package com.github.taoroot.cloud.mybatis;
 
-import com.github.taoroot.cloud.common.core.datascope.DataScope;
-import com.github.taoroot.cloud.common.core.datascope.DataScopeTypeEnum;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.taoroot.cloud.common.core.datascope.DataScope;
+import com.github.taoroot.cloud.common.core.datascope.DataScopeTypeEnum;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -94,10 +94,8 @@ public class DataScopeInterceptor extends AbstractSqlParserHandler implements In
         return invocation.proceed();
     }
 
-    protected void queryDataScope(DataScope dataScope, List<String> roles, Connection connection) {
-        String sql = "SELECT upms_role.scope_type, upms_role.scope FROM upms_role where role IN (?) order by scope_type desc limit 1";
-
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+    protected void queryDataScope(DataScope dataScope, List<Integer> roles, Connection connection) {
+        try (PreparedStatement statement = connection.prepareStatement(DataScope.getSql())) {
             statement.setString(1, CollectionUtil.join(roles, ","));
             int type;
             String scope;
@@ -112,7 +110,7 @@ public class DataScopeInterceptor extends AbstractSqlParserHandler implements In
                 }
             }
         } catch (Exception e) {
-            throw ExceptionUtils.mpe("Error: Method queryDataScope execution error of sql : \n %s \n", e, sql);
+            throw ExceptionUtils.mpe("Error: Method queryDataScope execution error of sql : \n %s \n", e, DataScope.getSql());
         }
     }
 
@@ -128,6 +126,4 @@ public class DataScopeInterceptor extends AbstractSqlParserHandler implements In
         }
         return null;
     }
-
-
 }

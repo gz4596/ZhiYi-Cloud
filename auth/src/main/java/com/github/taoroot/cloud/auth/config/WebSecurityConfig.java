@@ -46,4 +46,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public RestTemplate lbRestTemplate() {
         return new RestTemplate();
     }
+
+
+
+
+
+
+
+
+
+
 }

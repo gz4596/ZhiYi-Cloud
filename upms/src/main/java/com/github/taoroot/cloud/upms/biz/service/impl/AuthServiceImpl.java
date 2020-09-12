@@ -70,6 +70,7 @@ public class AuthServiceImpl implements AuthService {
             tree.putExtra("meta", meta);
         }));
 
+        userInfo.setRoleIds(userMapper.roleIds(userId));
         return userInfo;
     }
 }

@@ -1,8 +1,8 @@
 package com.github.taoroot.cloud.auth.service;
 
-import com.github.taoroot.cloud.auth.util.AuthUser;
 import com.github.taoroot.cloud.auth.util.AuthUserServiceProperties;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
+import com.github.taoroot.cloud.common.security.AuthUser;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpEntity;
@@ -67,7 +67,7 @@ public class RemoteUserDetailService implements UserDetailsService {
             user.setNickname(userInfo.getNickname());
         }
         user.setAttrs(userInfo.getAttrs());
-
+        user.setRoleIds(userInfo.getRoleIds());
         return user;
     }
 }
