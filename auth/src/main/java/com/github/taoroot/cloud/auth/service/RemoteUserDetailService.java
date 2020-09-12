@@ -60,11 +60,11 @@ public class RemoteUserDetailService implements UserDetailsService {
                 userInfo.getPassword(),
                 userInfo.isEnabled(),
                 AuthorityUtils.createAuthorityList(userInfo.getAuthorities()));
-        user.setNickname(userInfo.getNickname());
-        if (StringUtils.isEmpty(userInfo)) {
-            user.getAttrs().put("nickname", username);
+
+        if (StringUtils.isEmpty(userInfo.getNickname())) {
+            user.setNickname(username);
         } else {
-            user.getAttrs().put("nickname", userInfo.getNickname());
+            user.setNickname(userInfo.getNickname());
         }
         user.setAttrs(userInfo.getAttrs());
 

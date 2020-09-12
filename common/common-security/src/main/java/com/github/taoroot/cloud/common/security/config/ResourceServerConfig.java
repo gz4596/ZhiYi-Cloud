@@ -48,7 +48,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(ResourceServerSecurityConfigurer resources) {
         remoteTokenServices.setRestTemplate(lbRestTemplate());
         remoteTokenServices.setClientId("resource");
-        remoteTokenServices.setClientId("secret");
+        remoteTokenServices.setClientSecret("secret");
         resources.tokenServices(remoteTokenServices);
     }
 }
