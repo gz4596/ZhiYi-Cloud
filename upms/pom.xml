@@ -15,8 +15,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
         <dependency>
             <groupId>de.codecentric</groupId>
@@ -45,10 +45,6 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.taoroot.cloud</groupId>
-            <artifactId>common-swagger</artifactId>
         </dependency>
     </dependencies>
 

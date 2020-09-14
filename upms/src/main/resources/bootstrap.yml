@@ -1,18 +1,17 @@
 server:
   port: 6513
 
-logging:
-  level:
-    root: DEBUG
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://eureka:password@eureka-server:8848/eureka/
-
 spring:
   application:
     name: upms
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS-HOST:discovery-server}:${NACOS-PORT:8848}
+        password: nacos
+        username: nacos
   datasource:
     initialization-mode: never
     driver-class-name: com.mysql.cj.jdbc.Driver

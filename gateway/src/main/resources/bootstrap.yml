@@ -3,8 +3,13 @@ server:
 
 spring:
   application:
-    name: gateway
+    name: @artifactId@
+  profiles:
+    active: dev
   cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS-HOST:discovery-server}:${NACOS-PORT:8848}
     gateway:
       globalcors:
         corsConfigurations:
@@ -25,13 +30,13 @@ spring:
             - Path=/auth/**
           filters:
             - StripPrefix=1
+            - name: Retry
+              args:
+                retries: 3
+                series: SERVER_ERROR
         - id: upms
           uri: lb://upms
           predicates:
             - Path=/upms/**
           filters:
             - StripPrefix=1
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://eureka:password@eureka-server:8848/eureka/
