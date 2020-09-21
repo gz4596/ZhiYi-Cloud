@@ -1,0 +1,19 @@
+server:
+  port: 5513
+
+spring:
+  application:
+    name: @artifactId@
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS-HOST:discovery-server}:${NACOS-PORT:8848}
+        password: nacos
+        username: nacos
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: mall-portal-123456

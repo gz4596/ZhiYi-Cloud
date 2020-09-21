@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.github.taoroot.cloud.common.security.config.WebSecurityPermitAllConfigurer, \
+  com.github.taoroot.cloud.common.security.config.JwtAccessTokenConverterConfigurer
+

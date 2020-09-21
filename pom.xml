@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.taoroot.cloud</groupId>
-    <artifactId>zhiyi-cloud</artifactId>
+    <artifactId>zhiyi-parent</artifactId>
     <version>0.0.1</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
@@ -27,15 +27,17 @@
     </properties>
 
     <modules>
-        <module>common</module>
-<!--        <module>eureka</module>-->
-<!--        <module>config</module>-->
-        <module>gateway</module>
-        <module>admin</module>
-        <module>auth-api</module>
-        <module>auth</module>
-        <module>upms-api</module>
-        <module>upms</module>
+        <module>zhiyi-common</module>
+        <module>zhiyi-gateway</module>
+        <module>zhiyi-monitor</module>
+        <module>zhiyi-auth-api</module>
+        <module>zhiyi-auth</module>
+        <module>mall-admin-api</module>
+        <module>mall-admin-upms</module>
+        <module>mall-admin-security</module>
+        <module>mall-portal-api</module>
+        <module>mall-portal-user</module>
+        <module>mall-portal-pay</module>
     </modules>
 
     <dependencies>
@@ -121,32 +123,37 @@
             </dependency>
             <dependency>
                 <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>upms-api</artifactId>
+                <artifactId>mall-admin-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>auth-api</artifactId>
+                <artifactId>zhiyi-auth-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>common-security</artifactId>
+                <artifactId>zhiyi-common-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>common-mybatis</artifactId>
+                <artifactId>mall-portal-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>common-swagger</artifactId>
+                <artifactId>zhiyi-common-mybatis</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>common-core</artifactId>
+                <artifactId>zhiyi-common-swagger</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.taoroot.cloud</groupId>
+                <artifactId>zhiyi-common-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -212,11 +219,11 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>aliyun</id>-->
-<!--            <name>aliyun</name>-->
-<!--            <url>http://maven.aliyun.com/nexus/content/groups/public</url>-->
-<!--        </repository>-->
-<!--    </repositories>-->
+    <repositories>
+        <repository>
+            <id>aliyun</id>
+            <name>aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
 </project>
