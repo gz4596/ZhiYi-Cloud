@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper">
+
+    <resultMap id="SysUserPageVO" type="com.github.taoroot.cloud.mall.v1.common.entity.AdminUser">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="enabled" jdbcType="BOOLEAN" property="enabled"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <result column="dept_id" jdbcType="INTEGER" property="deptId"/>
+        <collection property="roles" column="{userId=id}" select="roleIds"/>
+    </resultMap>
+
+    <select id="roleIds" resultType="java.lang.Integer">
+        select r.id
+        from admin_user_role ur,
+             admin_role r
+        where r.id = ur.role_id
+          AND ur.user_id = #{userId};
+    </select>
+
+    <select id="roles" resultType="com.github.taoroot.cloud.mall.v1.common.entity.AdminRole">
+        select r.*
+        from admin_user_role ur,
+             admin_role r
+        where r.id = ur.role_id
+          AND ur.user_id = #{userId};
+    </select>
+
+    <select id="roleNames" resultType="java.lang.String">
+        select r.role
+        from admin_user_role ur,
+             admin_role r
+        where r.id = ur.role_id
+          AND ur.user_id = #{userId};
+    </select>
+
+
+    <select id="authorities" resultType="com.github.taoroot.cloud.mall.v1.common.entity.AdminAuthority">
+        select distinct a.*
+        from admin_authority a,
+        admin_role_authority ar
+        where a.id = ar.authority_id
+        <if test="type != null">
+            and a.type = #{type}
+        </if>
+        and ar.role_id in (
+        select r.id
+        from admin_user_role ur,
+        admin_role r
+        where r.id = ur.role_id
+        AND ur.user_id = #{userId}
+        )
+    </select>
+
+
+    <select id="authorityNames" resultType="java.lang.String">
+        select distinct a.authority
+        from admin_authority a,
+        admin_role_authority ar
+        where a.id = ar.authority_id
+        <if test="type != null">
+            and a.type = #{type}
+        </if>
+        and ar.role_id in (
+        select r.id
+        from admin_user_role ur,
+        admin_role r
+        where r.id = ur.role_id
+        AND ur.user_id = #{userId}
+        )
+    </select>
+
+    <select id="getPage" resultMap="SysUserPageVO">
+        select u.*, d.name as dept_name
+        from admin_user u
+        left join admin_dept d on d.id = u.dept_id
+        <where>
+            <if test="username != null and username != ''">
+                and u.username = #{username}
+            </if>
+            <if test="phone != null and phone != ''">
+                and u.phone = #{phone}
+            </if>
+            <if test="enabled != null ">
+                and u.enabled = #{enabled}
+            </if>
+            <if test="deptId != null">
+                and u.dept_id = #{deptId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -2,7 +2,7 @@
 
 文档说明 [https://zhiyi.zone]
 
-利用 Spring Cloud 搭建一个带有多用户表的小型商城.
+利用 Spring Cloud 搭建小型商城.
 
 **商城普通用户**
 
@@ -30,16 +30,19 @@ host 配置:
 | Microservice  | Port | Desc |
 | ----------- | ----------- | ----------- | 
 | GatewayApplication  | 8008      | 网关 |
-| UpmsApplication | 6513        | 通用用户权限管理系统
-| AuthApplication   | 6628| 统一认证中心|
-| AdminApplication   | 6222| 服务管理 |
+| AuthApplication   | 6628| 认证中心 |
+| MonitorApplication   | 6222 | 服务监控 |
+| MallAdminApplication | 6513  | 商城后台接口 |
+| MallPortalUserApplication | 6513  | 商城前台用户 |
+| MallPortalUserApplication | 6513  | 商城前台订单 |
+
 
 
 # 数据库
 
 ```sql
-create database `zhiyi-cloud-upms` default character set utf8mb4 collate utf8mb4_general_ci;
-create database `zhiyi-cloud-auth` default character set utf8mb4 collate utf8mb4_general_ci;
+create database `zhiyi-cloud-mall-v1` default character set utf8mb4 collate utf8mb4_general_ci;
+create database `zhiyi-cloud-authroization` default character set utf8mb4 collate utf8mb4_general_ci;
 ```
 
 # 测试脚本
@@ -56,4 +59,7 @@ curl --location --request POST 'localhost:6628/oauth/token' \
 curl --location --request GET 'localhost:6513/check_token' \
 --header 'Authorization: Bearer fab92feb-9fae-4658-989c-d07835dbff79'
 ```
+
+
+# 一个商城服务,至少具有一下角色
 

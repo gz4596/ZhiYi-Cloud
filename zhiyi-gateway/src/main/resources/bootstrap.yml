@@ -9,42 +9,13 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS-HOST:discovery-server}:${NACOS-PORT:8848}
-    gateway:
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: '*'
-            allowedMethods: '*'
-            allowedHeaders: '*'
-      x-forwarded:
-        enabled: true
-        host-enabled: true
-      discovery:
-        locator:
-          enabled: false # 不要自动支持,手动配置
-      routes:
-        - id: zhiyi-auth
-          uri: lb://zhiyi-auth
-          predicates:
-            - Path=/auth/**
-          filters:
-            - StripPrefix=1
-            - name: Retry
-              args:
-                retries: 3
-                series: SERVER_ERROR
-        - id: mall-admin-upms
-          uri: lb://mall-admin-upms
-          predicates:
-            - Path=/mall/admin/upms/**
-          filters:
-            - StripPrefix=3
-            - SwaggerHeaderFilter
-        - id: mall-portal-user
-          uri: lb://mall-portal-user
-          predicates:
-            - Path=/mall/portal/user/**
-          filters:
-            - StripPrefix=3
-            - SwaggerHeaderFilter
+        server-addr: ${NACOS_HOST:discovery-server}:${NACOS_PORT:8848}
+        password: ${NACOS_USER:nacos}
+        username: ${NACOS_PASS:nacos}
+      config:
+        password: ${spring.cloud.nacos.discovery.password}
+        username: ${spring.cloud.nacos.discovery.username}
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        file-extension: yml
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}

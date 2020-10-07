@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.taoroot.cloud</groupId>
+        <artifactId>mall-v1</artifactId>
+        <version>0.0.1</version>
+    </parent>
+
+    <artifactId>mall-v1-api-user</artifactId>
+    <name>${project.artifactId}</name>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.taoroot.cloud</groupId>
+            <artifactId>zhiyi-common-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.taoroot.cloud</groupId>
+            <artifactId>zhiyi-common-data</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.taoroot.cloud</groupId>
+            <artifactId>zhiyi-common-swagger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.taoroot.cloud</groupId>
+            <artifactId>zhiyi-common-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.taoroot.cloud</groupId>
+            <artifactId>mall-v1-common</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
+        <!-- 微信公众平台接口 -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+            <version>${mpweixin.version}</version>
+        </dependency>
+        <!-- 微信商户平台接口 -->
+        <dependency>
+            <groupId>com.github.javen205</groupId>
+            <artifactId>IJPay-WxPay</artifactId>
+            <version>${IJPay.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

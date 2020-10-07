@@ -1,6 +1,5 @@
 package com.github.taoroot.cloud.common.core.datascope;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,7 +13,6 @@ public enum DataScopeTypeEnum {
     CUSTOMIZE(4, "自定数据权限"),
     OWN(5, "仅本人数据权限");
 
-    @EnumValue
     private final int value;
     private final String description;
 

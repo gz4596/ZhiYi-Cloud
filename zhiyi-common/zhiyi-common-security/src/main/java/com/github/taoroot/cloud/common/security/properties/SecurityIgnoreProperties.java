@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@ConfigurationProperties(prefix = "spring.security.ignore")
+@ConfigurationProperties(prefix = "security.ignore")
 public class SecurityIgnoreProperties {
 
-    private List<List<String>> urls = new ArrayList<>();
+    private List<String> defaultUrls = new ArrayList<>();
+
+    private List<String> urls = new ArrayList<>();
 }

@@ -15,7 +15,7 @@ public class DataScope implements Serializable {
      */
     @Setter
     @Getter
-    static String sql = "SELECT ur.scope_type, ur.scope FROM upms_role ur where ur.id IN (?) order by scope_type desc limit 1";
+    static String sql = "SELECT ur.scope_type, ur.scope FROM admin_role ur where ur.id IN (?) order by ur.scope_type limit 1";
     /**
      * 限制范围为部门时字段名称
      */

@@ -16,7 +16,7 @@
     <modules>
         <module>zhiyi-common-core</module>
         <module>zhiyi-common-security</module>
-        <module>zhiyi-common-mybatis</module>
+        <module>zhiyi-common-data</module>
         <module>zhiyi-common-swagger</module>
     </modules>
 

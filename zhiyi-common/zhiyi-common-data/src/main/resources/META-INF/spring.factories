@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.github.taoroot.cloud.common.mybatis.MybatisAutoConfiguration,\
+  com.github.taoroot.cloud.common.redis.RedisCacheAutoConfiguration,\
+  com.github.taoroot.cloud.common.redis.RedisTemplateAutoConfiguration

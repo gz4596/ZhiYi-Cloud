@@ -59,7 +59,6 @@ buildSrc/build
 /integration-tests/build
 /src/asciidoc/build
 /build/
-application-dev.yml
 
 # Eclipse artifacts, including WTP generated manifests
 spring-*/src/main/java/META-INF/MANIFEST.MF

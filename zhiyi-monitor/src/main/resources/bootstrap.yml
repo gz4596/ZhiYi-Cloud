@@ -9,10 +9,13 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS-HOST:discovery-server}:${NACOS-PORT:8848}
-        password: nacos
-        username: nacos
-  security:
-    user:
-      name: admin
-      password: password
+        server-addr: ${NACOS_HOST:discovery-server}:${NACOS_PORT:8848}
+        password: ${NACOS_USER:nacos}
+        username: ${NACOS_PASS:nacos}
+      config:
+        password: ${spring.cloud.nacos.discovery.password}
+        username: ${spring.cloud.nacos.discovery.username}
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        file-extension: yml
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}

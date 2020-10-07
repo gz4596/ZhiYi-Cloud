@@ -1,0 +1,37 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: '*'
+            allowedMethods: '*'
+            allowedHeaders: '*'
+      x-forwarded:
+        enabled: true
+        host-enabled: true
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: zhiyi-authorization
+          uri: lb://zhiyi-authorization
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+            - SwaggerHeaderFilter
+        - id: mall-api-v1-user
+          uri: lb://mall-v1-api-user
+          predicates:
+            - Path=/mall/v1/user/**
+          filters:
+            - StripPrefix=3
+            - SwaggerHeaderFilter
+        - id: mall-api-v1-admin
+          uri: lb://mall-v1-api-admin
+          predicates:
+            - Path=/mall/v1/admin/**
+          filters:
+            - StripPrefix=3
+            - SwaggerHeaderFilter

@@ -18,6 +18,8 @@
         <swagger-ui.version>1.5.22</swagger-ui.version>
         <knife4j.version>2.0.4</knife4j.version>
         <admin.version>2.3.0</admin.version>
+        <IJPay.version>2.2.1</IJPay.version>
+        <mpweixin.version>3.3.0</mpweixin.version>
         <webjars.version>3.4.1</webjars.version>
         <security-oauth2.version>2.3.6.RELEASE</security-oauth2.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,19 +29,20 @@
     </properties>
 
     <modules>
+        <!-- 通用模块 -->
         <module>zhiyi-common</module>
+        <!-- 统一服务 -->
         <module>zhiyi-gateway</module>
+        <!-- 服务监控 -->
         <module>zhiyi-monitor</module>
-        <module>zhiyi-auth-api</module>
-        <module>zhiyi-auth</module>
-        <module>mall-admin-api</module>
-        <module>mall-admin-upms</module>
-        <module>mall-admin-security</module>
-        <module>mall-portal-api</module>
-        <module>mall-portal-user</module>
-        <module>mall-portal-pay</module>
+        <!-- 认证中心 -->
+        <module>zhiyi-authorization</module>
+
+        <!-- 基础版本 -->
+        <module>mall-v1</module>
     </modules>
 
+    <!-- 默认依赖 -->
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -63,8 +66,10 @@
         </dependency>
     </dependencies>
 
+    <!-- 依赖版本控制 -->
     <dependencyManagement>
         <dependencies>
+            <!-- spring boot 相关依赖 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -72,6 +77,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- spring cloud 相关依赖 -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -79,6 +85,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- spring cloud alibaba 相关依赖 -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
@@ -86,14 +93,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- 第三方依赖 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-extension</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-annotation</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
@@ -108,11 +112,6 @@
             </dependency>
             <dependency>
                 <groupId>de.codecentric</groupId>
-                <artifactId>spring-boot-admin-starter-server</artifactId>
-                <version>${admin.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-client</artifactId>
                 <version>${admin.version}</version>
             </dependency>
@@ -122,15 +121,12 @@
                 <version>${knife4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>mall-admin-api</artifactId>
-                <version>${project.version}</version>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>zhiyi-auth-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
+            <!-- 平台基础模块 -->
             <dependency>
                 <groupId>com.github.taoroot.cloud</groupId>
                 <artifactId>zhiyi-common-security</artifactId>
@@ -138,12 +134,7 @@
             </dependency>
             <dependency>
                 <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>mall-portal-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.taoroot.cloud</groupId>
-                <artifactId>zhiyi-common-mybatis</artifactId>
+                <artifactId>zhiyi-common-data</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -155,11 +146,6 @@
                 <groupId>com.github.taoroot.cloud</groupId>
                 <artifactId>zhiyi-common-core</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-core</artifactId>
-                <version>${hutool.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
@@ -207,6 +193,7 @@
         </plugins>
     </build>
 
+    <!-- 改用阿里云镜像 -->
     <pluginRepositories>
         <pluginRepository>
             <id>aliyun-plugin</id>
