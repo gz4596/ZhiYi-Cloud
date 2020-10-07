@@ -1,4 +1,4 @@
-package com.github.taoroot.cloud.admin.config;
+package com.github.taoroot.cloud.monitor.config;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

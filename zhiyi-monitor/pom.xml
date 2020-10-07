@@ -23,7 +23,8 @@
         </dependency>
         <dependency>
             <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <artifactId>spring-boot-admin-starter-server</artifactId>
+            <version>${admin.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
