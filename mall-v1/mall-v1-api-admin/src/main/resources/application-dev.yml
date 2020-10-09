@@ -21,6 +21,12 @@ security:
     resource:
       jwt:
         key-value: mall-v1-api-admin-jwt-secret
+
 logging:
   level:
-    root: info
+    root: INFO
+#    org.springframework.web: DEBUG
+#    org.springframework.security: DEBUG
+#    org.springframework.security.oauth2: DEBUG
+#    org.springframework.boot.autoconfigure: DEBUG
+    com.github.taoroot: DEBUG

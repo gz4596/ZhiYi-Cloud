@@ -33,7 +33,7 @@ public class AdminAuthority extends Model<AdminAuthority> {
     public static final int FUN = 1;
     public static final int MENU = 2;
 
-    @TableId(type = IdType.INPUT)
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     private String path;

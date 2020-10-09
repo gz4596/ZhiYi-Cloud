@@ -2,6 +2,7 @@ package com.github.taoroot.cloud.mall.v1.admin.web;
 
 import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
+import com.github.taoroot.cloud.common.security.annotation.Log;
 import com.github.taoroot.cloud.common.security.annotation.NoAuth;
 import com.github.taoroot.cloud.mall.v1.admin.service.AuthService;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +23,7 @@ public class AuthController {
      *
      * @param username 用户登录账号
      */
+    @Log(value = "账号登录")
     @NoAuth
     @SneakyThrows
     @ApiIgnore

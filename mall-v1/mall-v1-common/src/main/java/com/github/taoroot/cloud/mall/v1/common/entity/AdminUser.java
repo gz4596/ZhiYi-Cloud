@@ -7,12 +7,14 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
  * @author : zhiyi
  * Date: 2020/2/10
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("admin_user")
 @NoArgsConstructor

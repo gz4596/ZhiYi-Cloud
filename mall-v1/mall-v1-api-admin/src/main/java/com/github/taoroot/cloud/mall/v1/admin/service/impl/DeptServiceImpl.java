@@ -1,14 +1,14 @@
 package com.github.taoroot.cloud.mall.v1.admin.service.impl;
 
-import com.github.taoroot.cloud.common.core.utils.R;
-import com.github.taoroot.cloud.mall.v1.common.entity.AdminDept;
-import com.github.taoroot.cloud.mall.v1.admin.mapper.DeptMapper;
-import com.github.taoroot.cloud.mall.v1.admin.service.DeptService;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.taoroot.cloud.common.core.utils.R;
+import com.github.taoroot.cloud.mall.v1.admin.mapper.DeptMapper;
+import com.github.taoroot.cloud.mall.v1.admin.service.DeptService;
+import com.github.taoroot.cloud.mall.v1.common.entity.AdminDept;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -21,7 +21,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, AdminDept> implemen
 
     @Override
     public List<Tree<Integer>> tree(Integer parentId) {
-        List<AdminDept> list = baseMapper.selectList(Wrappers.emptyWrapper());
+        List<AdminDept> list = baseMapper.selectList(Wrappers.<AdminDept>lambdaQuery()
+                .eq(AdminDept::getEnabled, true));
         return getTrees(parentId, list);
     }
 

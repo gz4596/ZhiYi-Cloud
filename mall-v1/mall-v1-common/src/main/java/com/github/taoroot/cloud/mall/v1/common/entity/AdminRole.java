@@ -1,6 +1,5 @@
 package com.github.taoroot.cloud.mall.v1.common.entity;
 
-import com.github.taoroot.cloud.common.core.datascope.DataScopeTypeEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

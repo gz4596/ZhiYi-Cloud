@@ -1,4 +1,4 @@
-package com.github.taoroot.cloud.mall.v1.admin;
+package com.github.taoroot.cloud.mall.v1.admin.component;
 
 import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Component(SecurityConstants.REAL_TIME_USER_DETAILS_SERVICE)
-public class CustomUserService implements UserDetailsService {
+public class AuthUserService implements UserDetailsService {
 
     private final UserMapper userMapper;
 

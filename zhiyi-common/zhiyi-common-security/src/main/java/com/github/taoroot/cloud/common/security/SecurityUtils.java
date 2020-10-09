@@ -2,18 +2,25 @@ package com.github.taoroot.cloud.common.security;
 
 import com.github.taoroot.cloud.common.core.datascope.DataScope;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
+@Log4j2
 public class SecurityUtils {
     public static final String ROLE_IDS = "role_ids";
     public static final String DEPT_ID = "dept_id";
     public static final String NICKNAME = "nickname";
 
     public static Integer userId() {
-        return Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        if ("anonymousUser".equals(name)) {
+            log.debug("not found userId, userId() return -1");
+            return -1;
+        }
+        return Integer.parseInt(name);
     }
 
     public static DataScope dataScope() {
