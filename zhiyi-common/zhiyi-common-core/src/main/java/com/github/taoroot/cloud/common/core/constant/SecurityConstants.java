@@ -23,6 +23,10 @@ public interface SecurityConstants {
 
     String AUTH_JWT_SECRET = "jwt";
 
+    String ROLE_IDS = "role_ids";
+    String DEPT_ID = "dept_id";
+    String TENANT_ID = "tenant_id";
+    String NICKNAME = "nickname";
 
     /**
      * 授权码模式code key 前缀

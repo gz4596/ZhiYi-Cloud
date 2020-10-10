@@ -1,9 +1,22 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: root
-    url: jdbc:mysql://127.0.0.1:3306/zhiyi-cloud-mall-v1?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    dynamic:
+      primary: zhiyi-cloud-mall-v1_1
+      strict: true
+      tenant:
+        prefix: zhiyi-cloud-mall-v1_
+        enable: true
+      datasource:
+        zhiyi-cloud-mall-v1_1:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          username: root
+          password: root
+          url: jdbc:mysql://127.0.0.1:3306/zhiyi-cloud-mall-v1?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+        zhiyi-cloud-mall-v1_2:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          username: root
+          password: root
+          url: jdbc:mysql://127.0.0.1:3306/zhiyi-cloud-mall-v1_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml

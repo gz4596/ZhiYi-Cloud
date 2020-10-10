@@ -2,9 +2,11 @@ package com.github.taoroot.cloud.common.security.config;
 
 import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.security.oauth.AuthUserAuthenticationConverter;
+import com.github.taoroot.cloud.common.security.tenant.TenantDataSourceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;

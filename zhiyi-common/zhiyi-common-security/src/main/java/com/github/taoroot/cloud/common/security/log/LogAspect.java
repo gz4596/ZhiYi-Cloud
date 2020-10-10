@@ -7,6 +7,7 @@ import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.core.vo.LogInfo;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.annotation.Log;
+import com.github.taoroot.cloud.common.security.tenant.TenantContextHolder;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -87,6 +88,8 @@ public class LogAspect {
             if (logAnnotation.isSaveRequestData()) {
                 setRequestValue(joinPoint, logInfo);
             }
+            Integer tenant = TenantContextHolder.get();
+            logInfo.setTenantId(tenant);
             publisher.publishEvent(logInfo);
         } catch (Exception exp) {
             exp.printStackTrace();

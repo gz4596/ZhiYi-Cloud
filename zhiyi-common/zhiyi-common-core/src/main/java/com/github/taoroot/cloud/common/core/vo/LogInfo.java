@@ -79,4 +79,6 @@ public class LogInfo {
      * 操作时间
      */
     private Long time;
+
+    private Integer tenantId;
 }

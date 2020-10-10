@@ -9,9 +9,6 @@ APP_HOME=/home/ubuntu/ZhiYi-Cloud
 JAR_NAME=${APP_HOME}/package/${APP_NAME}.jar
 JAVA_OUT=${APP_HOME}/logs/start.log
 NACOS_HOST=127.0.0.1
-NACOS_PORT=8848
-NACOS_USER=nacos
-NACOS_PASS=nacosnacos
 usage() {
     echo "Usage: $PROG_NAME {start|stop|restart} {xxx}.jar {port}"
     exit 2
@@ -49,7 +46,7 @@ start_application() {
     echo ${JAR_NAME}
     cd ${APP_HOME}
     echo ${NACOS_HOST}
-    nohup java -jar -Xms512m -Xmx512m -Xmn256m ${JAR_NAME} --spring.profiles.active=test --spring.cloud.nacos.discovery.password=nacos > ${JAVA_OUT} 2>&1 &
+    nohup java -jar -Xms850m -Xmn850m ${JAR_NAME} --spring.profiles.active=test --spring.cloud.nacos.discovery.password=nacos > ${JAVA_OUT} 2>&1 &
     echo "started java process"
 }
 

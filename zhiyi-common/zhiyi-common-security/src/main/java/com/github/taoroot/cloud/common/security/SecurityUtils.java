@@ -10,9 +10,6 @@ import org.springframework.util.StringUtils;
 
 @Log4j2
 public class SecurityUtils {
-    public static final String ROLE_IDS = "role_ids";
-    public static final String DEPT_ID = "dept_id";
-    public static final String NICKNAME = "nickname";
 
     public static Integer userId() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();

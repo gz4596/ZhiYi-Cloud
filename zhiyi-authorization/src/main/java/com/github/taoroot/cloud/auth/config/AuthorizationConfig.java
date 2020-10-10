@@ -4,8 +4,8 @@ import com.github.taoroot.cloud.auth.service.AuthUserService;
 import com.github.taoroot.cloud.auth.service.CacheClientDetailsService;
 import com.github.taoroot.cloud.auth.service.JwtSignerService;
 import com.github.taoroot.cloud.auth.social.SocialCodeTokenGranter;
+import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.security.AuthUser;
-import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.oauth.AuthUserAuthenticationConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -97,7 +97,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
             if (authentication.getPrincipal() instanceof AuthUser) {
                 AuthUser principal = (AuthUser) authentication.getPrincipal();
                 Map<String, Object> info = new HashMap<>();
-                info.put(SecurityUtils.NICKNAME, principal.getNickname());
+                info.put(SecurityConstants.NICKNAME, principal.getNickname());
                 info.putAll(principal.getAttrs());
                 ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
             }

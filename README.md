@@ -27,11 +27,3 @@ host 配置:
 | MonitorApplication   | 6222 | 服务监控 |
 | V1UserApplication   | 6222 | 商城前台接口(v1) |
 | V1AdminApplication   | 6222 | 商城后台接口(v1) |
-
-
-## 数据库创建
-
-```sql
-create database `zhiyi-cloud-auth` default character set utf8mb4 collate utf8mb4_general_ci;
-create database `zhiyi-cloud-mall-v1` default character set utf8mb4 collate utf8mb4_general_ci;
-```
