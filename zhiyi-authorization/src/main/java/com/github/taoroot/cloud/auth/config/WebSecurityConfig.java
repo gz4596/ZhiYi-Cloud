@@ -26,8 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SocialDetailsService socialDetailsService;
 
-    @Qualifier("authUserService")
     @Autowired
+    @Qualifier("authUserService")
     private UserDetailsService userDetailsService;
 
     /**

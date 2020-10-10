@@ -5,13 +5,16 @@ import com.github.taoroot.cloud.auth.service.CacheClientDetailsService;
 import com.github.taoroot.cloud.auth.service.JwtSignerService;
 import com.github.taoroot.cloud.auth.social.SocialCodeTokenGranter;
 import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
+import com.github.taoroot.cloud.common.core.utils.CaptchaCacheService;
 import com.github.taoroot.cloud.common.security.AuthUser;
+import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.oauth.AuthUserAuthenticationConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -43,6 +46,8 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     private final CacheClientDetailsService cacheClientDetailsService;
 
+    private final CaptchaCacheService captchaCacheService;
+
     /**
      * 配置 Spring MVC Controller
      */
@@ -67,12 +72,20 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     /**
-     * 扩展支持 social 模式
+     * 扩展支持 social 模式, 并且 password 模式添加验证码
      */
     public TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer endpoints,
                                      AuthenticationManager authenticationManager) {
         TokenGranter tokenGranter = endpoints.getTokenGranter();
         return (grantType, tokenRequest) -> {
+            // 密码模式添加验证码匹配
+            if (grantType.equalsIgnoreCase("password")) {
+                String key = SecurityUtils.request().getParameter(SecurityConstants.IMAGE_KEY_PARAM);
+                String value = SecurityUtils.request().getParameter(SecurityConstants.IMAGE_VALUE_PARAM);
+                if (!captchaCacheService.check(key, value)) {
+                    throw new InvalidGrantException("验证码错误");
+                }
+            }
             OAuth2AccessToken grant = tokenGranter.grant(grantType, tokenRequest);
             if (grant != null) {
                 return grant;

@@ -28,6 +28,9 @@ public interface SecurityConstants {
     String TENANT_ID = "tenant_id";
     String NICKNAME = "nickname";
 
+    String IMAGE_KEY_PARAM = "imageKey";
+    String IMAGE_VALUE_PARAM = "imageCode";
+
     /**
      * 授权码模式code key 前缀
      */

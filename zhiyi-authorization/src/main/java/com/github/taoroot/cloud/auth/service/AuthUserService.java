@@ -22,15 +22,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class AuthUserService implements UserDetailsService, SocialDetailsService {
@@ -96,16 +93,13 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
     private UserDetails getUserDetails(String path, MultiValueMap<String, String> params) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(path);
         URI uri = builder.queryParams(params).build().encode().toUri();
-
-        HttpServletRequest request = ((ServletRequestAttributes) Objects
-                .requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request = SecurityUtils.request();
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(SecurityConstants.FROM, SecurityConstants.FROM_IN);
         httpHeaders.add(SecurityConstants.TENANT_ID, String.valueOf(TenantContextHolder.get()));
         httpHeaders.add("X-Forwarded-For", request.getHeader("X-Forwarded-For"));
         httpHeaders.add("X-Real-IP", request.getHeader("X-Real-IP"));
-
         AuthUserInfo userInfo = lbRestTemplate
                 .exchange(uri, HttpMethod.GET, new HttpEntity<>(httpHeaders), AuthUserInfo.class)
                 .getBody();
