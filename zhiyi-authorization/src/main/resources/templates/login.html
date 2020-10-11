@@ -26,15 +26,24 @@
         </p>
         <p>
             <label for="imageCode" class="sr-only">验证码</label>
-            <input type="text" id="imageCode" name="imageCode" class="form-control" placeholder="请输入验证码" required style="width: 70%">
-            <img onclick="location.reload();" style="width: 79px; height: 85%; margin-top: -65px; margin-left: 213px;" th:src="'/captcha/image?key=' + imageCode"/>
+            <input type="text" id="imageCode" name="imageCode" class="form-control" placeholder="请输入验证码" required
+                   style="width: 70%">
+            <img onclick="location.reload();" style="width: 79px; height: 85%; margin-top: -65px; margin-left: 213px;"
+                 th:src="'/captcha/image?key=' + imageCode"/>
         </p>
         <input type="hidden" id="imageKey" name="imageKey" th:value="imageCode">
         <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
         <h2 class="form-signin-heading"></h2>
+        <table class="table table-striped">
+            <tr th:each="item : ${socials}">
+                <img class="icon-style" th:src="${item.icon}"/>
+                <a th:text="${item.title}" th:href="${item.authorizeUri}">key</a>
+                <span style="color: bisque; margin: 0 5px" ></span>
+            </tr>
+        </table>
         <div class="alert alert-success" role="alert"
              th:if="${param.error != null && session.SPRING_SECURITY_LAST_EXCEPTION != null}">
-            <p style="color: red" th:if="${not #strings.isEmpty(session.SPRING_SECURITY_LAST_EXCEPTION.message)}"
+            <p style="color: #ff0000" th:if="${not #strings.isEmpty(session.SPRING_SECURITY_LAST_EXCEPTION.message)}"
                th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">登录失败</p>
         </div>
     </form>

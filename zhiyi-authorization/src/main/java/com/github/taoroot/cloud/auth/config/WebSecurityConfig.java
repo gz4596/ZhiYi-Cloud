@@ -2,6 +2,7 @@ package com.github.taoroot.cloud.auth.config;
 
 import com.github.taoroot.cloud.auth.filter.CaptchaValidationFilter;
 import com.github.taoroot.cloud.auth.social.SocialAuthenticationProvider;
+import com.github.taoroot.cloud.auth.social.SocialCodeAuthenticationFilter;
 import com.github.taoroot.cloud.auth.social.SocialDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -60,10 +61,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login").and()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/login", "/social").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(captchaValidationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new SocialCodeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic();
         // @formatter:on
     }

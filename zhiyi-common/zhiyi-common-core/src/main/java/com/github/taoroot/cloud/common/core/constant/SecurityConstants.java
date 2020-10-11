@@ -17,9 +17,14 @@ public interface SecurityConstants {
     String REAL_TIME_USER_DETAILS_SERVICE = "realTimeUserDetailsService";
 
 
+    /**
+     * {"userAuthPath":"http://mall-v1-api-admin/auth/username", "socialAuthPath": "http://mall-v1-api-admin/auth/social", "socialAuthListPath": "http://mall-v1-api-admin/auth/socials", "jwt": "mall-v1-api-admin-jwt-secret"}
+     */
     String AUTH_USER_PATH = "userAuthPath";
 
     String AUTH_SOCIAL_PATH = "socialAuthPath";
+
+    String AUTH_SOCIAL_LIST_PATH = "socialAuthListPath";
 
     String AUTH_JWT_SECRET = "jwt";
 

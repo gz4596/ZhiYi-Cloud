@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
 @Data
 @TableName("admin_user_role")
 @EqualsAndHashCode(callSuper = true)

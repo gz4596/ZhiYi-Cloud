@@ -36,7 +36,6 @@ public class SocialAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("type and code must be required");
         }
 
-
         UserDetails userDetails = socialDetailsService.loadUserBySocial(type.toString(), code.toString());
         if (userDetails == null) {
             log.debug("Authentication failed: no credentials provided");

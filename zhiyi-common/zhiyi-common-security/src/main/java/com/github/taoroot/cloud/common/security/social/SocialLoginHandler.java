@@ -15,7 +15,7 @@ public interface SocialLoginHandler {
     Boolean check(String code);
 
     /**
-     * 通过用户传入获取唯一标识
+     * 获取第三方的账号内容
      */
     String identify(String code);
 

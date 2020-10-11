@@ -4,6 +4,10 @@ body {
     background-color: #eee;
 }
 
+.icon-style {
+    width: 16px;
+    margin: 0 5px 2px 5px;
+}
 
 .form-signin {
     max-width: 330px;

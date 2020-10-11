@@ -30,16 +30,16 @@ public class AuthController {
     @SneakyThrows
     @ApiIgnore
     @GetMapping(value = "/auth/social")
-    public AuthUserInfo userInfoBySocial(String type, String code) {
+    public R<AuthUserInfo> userInfoBySocial(String type, String code) {
         SocialLoginHandler socialLoginHandler = this.socialLoginHandler.get(type.toLowerCase());
         if (socialLoginHandler == null) {
             socialLoginHandler = this.socialLoginHandler.get(type.toUpperCase());
         }
         if (socialLoginHandler == null) {
             log.error("SocialLoginHandler 不存在 {}", type);
-            return null;
+            return R.errMsg(type + " 不存在");
         }
-        return socialLoginHandler.handle(code);
+        return R.ok(socialLoginHandler.handle(code));
     }
 
     @ApiOperation("获取用户信息")
