@@ -99,6 +99,7 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
         httpHeaders.add(SecurityConstants.FROM, SecurityConstants.FROM_IN);
         httpHeaders.add(SecurityConstants.TENANT_ID, String.valueOf(TenantContextHolder.get()));
         httpHeaders.add("X-Forwarded-For", request.getHeader("X-Forwarded-For"));
+        httpHeaders.add("X-Forwarded-Host", request.getHeader("X-Forwarded-Host"));
         httpHeaders.add("X-Real-IP", request.getHeader("X-Real-IP"));
         AuthUserInfo userInfo = lbRestTemplate
                 .exchange(uri, HttpMethod.GET, new HttpEntity<>(httpHeaders), AuthUserInfo.class)

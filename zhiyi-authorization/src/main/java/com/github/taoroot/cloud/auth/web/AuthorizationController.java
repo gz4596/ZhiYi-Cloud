@@ -3,6 +3,7 @@ package com.github.taoroot.cloud.auth.web;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.captcha.generator.RandomGenerator;
+import cn.hutool.core.util.IdUtil;
 import com.github.taoroot.cloud.common.core.utils.CaptchaCacheService;
 import com.github.taoroot.cloud.common.security.annotation.NoAuth;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.UUID;
 
 /**
  * @author Joe Grandja
@@ -35,6 +37,7 @@ public class AuthorizationController {
 
     @GetMapping(value = "/login")
     public String login(Model model) {
+        model.addAttribute("imageCode", IdUtil.fastSimpleUUID());
         // 已经登录不能再进入登录界面
         return "login";
     }

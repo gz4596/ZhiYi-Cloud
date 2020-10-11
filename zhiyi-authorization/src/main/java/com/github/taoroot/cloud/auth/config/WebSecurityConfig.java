@@ -1,5 +1,6 @@
 package com.github.taoroot.cloud.auth.config;
 
+import com.github.taoroot.cloud.auth.filter.CaptchaValidationFilter;
 import com.github.taoroot.cloud.auth.social.SocialAuthenticationProvider;
 import com.github.taoroot.cloud.auth.social.SocialDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -29,6 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier("authUserService")
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private CaptchaValidationFilter captchaValidationFilter;
 
     /**
      * 注入 Spring 容器中, 在授权服务器中密码模式下,验证用户密码正确性, 以及第三方授权码验证
@@ -58,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .addFilterBefore(captchaValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic();
         // @formatter:on
     }

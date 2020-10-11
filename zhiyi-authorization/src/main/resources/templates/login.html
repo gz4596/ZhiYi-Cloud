@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Please sign in</title>
+    <title>ZhyYi-Cloud OAuth2</title>
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css"
           th:href="@{/webjars/bootstrap/css/bootstrap.css}"/>
     <link href="/signin.css" rel="stylesheet" crossorigin="anonymous"/>
@@ -16,14 +16,20 @@
     <form class="form-signin" method="post" action="/login">
         <h2 class="form-signin-heading">ZhyYi-Cloud 统一授权</h2>
         <p>
-            <label for="username" class="sr-only">Username</label>
-            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required
+            <label for="username" class="sr-only">账号</label>
+            <input type="text" id="username" name="username" class="form-control" placeholder="请输入账号" required
                    autofocus>
         </p>
         <p>
-            <label for="password" class="sr-only">Password</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+            <label for="password" class="sr-only">密码</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码" required>
         </p>
+        <p>
+            <label for="imageCode" class="sr-only">验证码</label>
+            <input type="text" id="imageCode" name="imageCode" class="form-control" placeholder="请输入验证码" required style="width: 70%">
+            <img onclick="location.reload();" style="width: 79px; height: 85%; margin-top: -65px; margin-left: 213px;" th:src="'/captcha/image?key=' + imageCode"/>
+        </p>
+        <input type="hidden" id="imageKey" name="imageKey" th:value="imageCode">
         <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
         <h2 class="form-signin-heading"></h2>
         <div class="alert alert-success" role="alert"
