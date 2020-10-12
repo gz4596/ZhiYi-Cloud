@@ -62,7 +62,7 @@ public class AuthorizationController {
         }
 
         String requestURL = request.getRequestURL().toString()
-                .replace(request.getContextPath(), "/code_callback");
+                .replaceFirst(request.getServletPath(), "/code_callback");
 
         UriComponents requestUri = UriComponentsBuilder
                 .fromUriString(target) // 指向真正授权的地址
