@@ -32,5 +32,7 @@ public class AdminSocialDetails extends Model<AdminSocialDetails> {
 
 	private String icon;
 
-	private String target;
+	private String proxyUri;
+
+	private Boolean isProxy;
 }

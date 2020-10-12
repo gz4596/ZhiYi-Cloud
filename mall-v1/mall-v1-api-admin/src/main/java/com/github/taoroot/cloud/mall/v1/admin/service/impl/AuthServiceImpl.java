@@ -24,8 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -94,31 +93,61 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public List<AuthSocialInfo> socials(String redirectUrl) {
+    public List<AuthSocialInfo> socials(String redirectUrl, Boolean isProxy) {
         List<AdminSocialDetails> adminSocialDetails = socialDetailsMapper.selectList(Wrappers.emptyWrapper());
         return adminSocialDetails.stream().map(social -> {
+            String authorizeUri;
+            String redirectUri = String.format(social.getAuthorizeUri(), social.getAppId(), redirectUrl);
+            URI uri = UriComponentsBuilder
+                    .fromUriString(redirectUri)
+                    .queryParam(SecurityConstants.TENANT_ID, TenantContextHolder.get()) // 加租户ID
+                    .build().toUri();
+            authorizeUri = uri.toString();
+
+            // 代理模式
+            if (!StringUtils.isEmpty(social.getProxyUri()) && isProxy && social.getIsProxy()) {
+                String origin = buildFullRequestUrl(uri.getScheme(), uri.getHost(), uri.getPort(), uri.getPath(), null);
+                authorizeUri = UriComponentsBuilder
+                        .fromUriString(social.getProxyUri())
+                        .query(uri.getQuery())
+                        .fragment(uri.getFragment())
+                        .queryParam(SecurityConstants.OAUTH2_PROXY_ORIGIN_PARAM, origin)
+                        .build()
+                        .toString();
+            }
+
             AuthSocialInfo socialInfo = new AuthSocialInfo();
+            socialInfo.setAuthorizeUri(authorizeUri);
             socialInfo.setType(social.getType());
             socialInfo.setTitle(social.getTitle());
-
-            String redirectUri = String.format(social.getAuthorizeUri(), social.getAppId(), redirectUrl);
-
-            UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-                    .fromUriString(redirectUri)
-                    .queryParam(SecurityConstants.TENANT_ID, TenantContextHolder.get());
-
-            // 代理 code 获取
-            if (!StringUtils.isEmpty(social.getTarget())) {
-                try {
-                    uriComponentsBuilder.queryParam(SecurityConstants.OAUTH2_PROXY_PARAM,
-                            URLEncoder.encode(social.getTarget(), "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-            socialInfo.setAuthorizeUri(uriComponentsBuilder.build().toUriString());
             socialInfo.setIcon(social.getIcon());
             return socialInfo;
         }).collect(Collectors.toList());
+    }
+
+    public static String buildFullRequestUrl(String scheme, String serverName,
+                                             int serverPort, String requestURI, String queryString) {
+
+        scheme = scheme.toLowerCase();
+
+        StringBuilder url = new StringBuilder();
+        url.append(scheme).append("://").append(serverName);
+
+        if ("http".equals(scheme)) {
+            if (serverPort != 80 && serverPort > 0) {
+                url.append(":").append(serverPort);
+            }
+        } else if ("https".equals(scheme)) {
+            if (serverPort != 443 && serverPort > 0) {
+                url.append(":").append(serverPort);
+            }
+        }
+        url.append(requestURI);
+
+        if (queryString != null) {
+            url.append("?").append(queryString);
+        }
+
+        return url.toString();
     }
 }

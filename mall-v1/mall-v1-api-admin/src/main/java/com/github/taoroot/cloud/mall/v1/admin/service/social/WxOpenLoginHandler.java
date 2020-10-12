@@ -16,9 +16,13 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -28,7 +32,6 @@ public class WxOpenLoginHandler extends AbstractSocialLoginHandler {
     private final UserMapper userMapper;
     private final SocialDetailsMapper socialDetailsMapper;
     private final UserSocialMapper userSocialMapper;
-    private final RestTemplate restTemplate;
 
     @Override
     public String identify(String code, String redirectUri) {
@@ -37,6 +40,8 @@ public class WxOpenLoginHandler extends AbstractSocialLoginHandler {
         String uri = String.format(SocialType.WX_OPEN_ACCESS_TOKEN_URL,
                 socialDetails.getAppId(),
                 socialDetails.getAppSecret(), code);
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new WxMappingJackson2HttpMessageConverter());
         Map<String, Object> body = restTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(new HttpHeaders()),
                 new ParameterizedTypeReference<Map<String, Object>>() {
                 })
@@ -70,5 +75,12 @@ public class WxOpenLoginHandler extends AbstractSocialLoginHandler {
         return authUserInfo;
     }
 
-
+    public static class WxMappingJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
+        public WxMappingJackson2HttpMessageConverter() {
+            List<MediaType> mediaTypes = new ArrayList<>();
+            mediaTypes.add(MediaType.TEXT_PLAIN);
+            mediaTypes.add(MediaType.TEXT_HTML);  // 解决微信问题:  放回格式是 text/plain 的问题
+            setSupportedMediaTypes(mediaTypes);
+        }
+    }
 }

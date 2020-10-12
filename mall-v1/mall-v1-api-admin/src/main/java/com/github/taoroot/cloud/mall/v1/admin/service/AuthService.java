@@ -11,5 +11,5 @@ public interface AuthService {
 
     AuthUserInfo authByUsername(String username);
 
-    List<AuthSocialInfo> socials(String redirectUrl);
+    List<AuthSocialInfo> socials(String redirectUrl, Boolean isProxy);
 }

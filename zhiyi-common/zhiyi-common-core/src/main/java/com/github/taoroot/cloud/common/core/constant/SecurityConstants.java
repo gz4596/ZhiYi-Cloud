@@ -37,7 +37,7 @@ public interface SecurityConstants {
     String IMAGE_KEY_PARAM = "imageKey";
     String IMAGE_VALUE_PARAM = "imageCode";
 
-    String OAUTH2_PROXY_PARAM = "target_url";
+    String OAUTH2_PROXY_ORIGIN_PARAM = "proxy_origin";
 
     /**
      * 授权码模式code key 前缀

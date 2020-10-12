@@ -83,13 +83,14 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
     }
 
     @Override
-    public List<AuthSocialInfo> getSocials(String redirectUrl) {
+    public List<AuthSocialInfo> getSocials(String redirectUri) {
         ClientDetails clientDetails = getClientDetails();
         Map<String, Object> additionalInformation = clientDetails.getAdditionalInformation();
         String path = (String) additionalInformation.get(SecurityConstants.AUTH_SOCIAL_LIST_PATH);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.put("redirectUri", Collections.singletonList(redirectUrl));
+        params.put("redirect_uri", Collections.singletonList(redirectUri));
+        params.put("isProxy", Collections.singletonList("false")); // 避免被代理
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(path);
         URI uri = builder.queryParams(params).build().encode().toUri();
         HttpHeaders httpHeaders = SecurityUtils.httpHeaders();
@@ -173,4 +174,5 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
         }
         return authUser;
     }
+
 }

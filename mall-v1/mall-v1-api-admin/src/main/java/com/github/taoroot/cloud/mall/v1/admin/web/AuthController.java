@@ -48,8 +48,9 @@ public class AuthController {
     @SneakyThrows
     @ApiIgnore
     @GetMapping(value = "/auth/socials")
-    public R<List<AuthSocialInfo>> socials(String redirectUri) {
-        return R.ok(authservice.socials(redirectUri));
+    public R<List<AuthSocialInfo>> socials(@RequestParam("redirect_uri") String redirectUri,
+                                           @RequestParam(defaultValue = "true") Boolean isProxy) {
+        return R.ok(authservice.socials(redirectUri, isProxy));
     }
 
     /**
