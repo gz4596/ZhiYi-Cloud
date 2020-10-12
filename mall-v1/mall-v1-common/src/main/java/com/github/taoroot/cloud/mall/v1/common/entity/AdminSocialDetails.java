@@ -28,7 +28,7 @@ public class AdminSocialDetails extends Model<AdminSocialDetails> {
 
 	private String appSecret;
 
-	private String redirectUri;
+	private String authorizeUri;
 
 	private String icon;
 

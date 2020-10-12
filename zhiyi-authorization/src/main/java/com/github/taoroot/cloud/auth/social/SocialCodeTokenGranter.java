@@ -38,10 +38,11 @@ public class SocialCodeTokenGranter extends AbstractTokenGranter {
         Map<String, String> parameters = new LinkedHashMap<String, String>(tokenRequest.getRequestParameters());
         String type = parameters.get("type");
         String code = parameters.get("code");
+        String redirectUri = parameters.get("redirect_uri");
         // Protect from downstream leaks of code
         parameters.remove("code");
 
-        Authentication userAuth = new SocialCodeAuthenticationToken(type, code);
+        Authentication userAuth = new SocialCodeAuthenticationToken(type, code, redirectUri);
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
         try {
             userAuth = authenticationManager.authenticate(userAuth);

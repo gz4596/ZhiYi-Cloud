@@ -37,8 +37,8 @@
         <table class="table table-striped">
             <tr th:each="item : ${socials}">
                 <img class="icon-style" th:src="${item.icon}"/>
-                <a th:text="${item.title}" th:href="${item.authorizeUri}">key</a>
-                <span style="color: bisque; margin: 0 5px" ></span>
+                <span th:text="${item.title}" th:onclick="social([[${item.type}]],[[${item.authorizeUri}]]);">key</span>
+                <span style="color: bisque; margin: 0 5px"></span>
             </tr>
         </table>
         <div class="alert alert-success" role="alert"
@@ -47,6 +47,41 @@
                th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">登录失败</p>
         </div>
     </form>
+    <form id="socialForm" method="post" action="/social" style="display: none">
+        <input type="hidden" id="type" name="type">
+        <input type="hidden" id="code" name="code">
+    </form>
 </div>
+<script>
+    function param2Obj(url) {
+        const search = decodeURIComponent(url.split('?')[1]).replace(/\+/g, ' ')
+        if (!search) {
+            return {}
+        }
+        const obj = {}
+        const searchArr = search.split('&')
+        searchArr.forEach(v => {
+            const index = v.indexOf('=')
+            if (index !== -1) {
+                const name = v.substring(0, index)
+                const val = v.substring(index + 1, v.length)
+                obj[name] = val
+            }
+        })
+        return obj
+    }
+
+    const code = param2Obj(window.location.href)['code'];
+    if (code) {
+        document.getElementById('type').value = window.sessionStorage.getItem("type")
+        document.getElementById('code').value = code
+        document.getElementById('socialForm').submit()
+    }
+
+    function social(type, uri) {
+        window.sessionStorage.setItem('type', type)
+        window.location.href = uri
+    }
+</script>
 </body>
 </html>

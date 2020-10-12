@@ -7,7 +7,7 @@ import com.github.taoroot.cloud.common.core.vo.AuthSocialInfo;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.AuthUser;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
-import com.github.taoroot.cloud.common.security.tenant.TenantContextHolder;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -30,13 +30,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@Log4j2
 @Service
 public class AuthUserService implements UserDetailsService, SocialDetailsService {
 
@@ -64,7 +64,7 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
     }
 
     @Override
-    public UserDetails loadUserBySocial(String type, String code) throws UsernameNotFoundException {
+    public UserDetails loadUserBySocial(String type, String code, String redirectUri) throws UsernameNotFoundException {
         ClientDetails clientDetails = getClientDetails();
 
         Map<String, Object> additionalInformation = clientDetails.getAdditionalInformation();
@@ -77,24 +77,14 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.put("type", Collections.singletonList(type));
         params.put("code", Collections.singletonList(code));
+        params.put("redirect_uri", Collections.singletonList(redirectUri));
         params.put("client", Collections.singletonList(clientDetails.getClientId()));
         return getUserDetails(path, params);
     }
 
     @Override
     public List<AuthSocialInfo> getSocials(String redirectUrl) {
-        ClientDetails clientDetails;
-        try {
-            RequestCache requestCache = new HttpSessionRequestCache();
-            SavedRequest request = requestCache.getRequest(SecurityUtils.request(), null);
-            String clientId = request.getParameterMap().get("client_id")[0];
-            clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        } catch (Exception e) {
-            throw new UsernameNotFoundException("客户端不存在");
-        }
-        if (clientDetails == null) {
-            throw new UsernameNotFoundException("客户端不存在");
-        }
+        ClientDetails clientDetails = getClientDetails();
         Map<String, Object> additionalInformation = clientDetails.getAdditionalInformation();
         String path = (String) additionalInformation.get(SecurityConstants.AUTH_SOCIAL_LIST_PATH);
 
@@ -102,7 +92,7 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
         params.put("redirectUri", Collections.singletonList(redirectUrl));
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(path);
         URI uri = builder.queryParams(params).build().encode().toUri();
-        HttpHeaders httpHeaders = getHttpHeaders();
+        HttpHeaders httpHeaders = SecurityUtils.httpHeaders();
         List<AuthSocialInfo> socialInfos = new ArrayList<>();
         try {
             R<List<AuthSocialInfo>> r = lbRestTemplate.exchange(
@@ -118,18 +108,6 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
         return socialInfos;
     }
 
-
-    private HttpHeaders getHttpHeaders() {
-        HttpServletRequest request = SecurityUtils.request();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(SecurityConstants.FROM, SecurityConstants.FROM_IN);
-        httpHeaders.add(SecurityConstants.TENANT_ID, String.valueOf(TenantContextHolder.get()));
-        httpHeaders.add("X-Forwarded-For", request.getHeader("X-Forwarded-For"));
-        httpHeaders.add("X-Forwarded-Host", request.getHeader("X-Forwarded-Host"));
-        httpHeaders.add("X-Real-IP", request.getHeader("X-Real-IP"));
-        return httpHeaders;
-    }
-
     /**
      * 获取客户端信息
      *
@@ -138,31 +116,41 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
     private ClientDetails getClientDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null) {
+        String clientId = null;
+        if (authentication != null && !"anonymousUser".equals(authentication.getName())) {
+            clientId = authentication.getName();
+        } else {
+            RequestCache requestCache = new HttpSessionRequestCache();
+            SavedRequest request = requestCache.getRequest(SecurityUtils.request(), null);
+            if(request != null) {
+                String[] clientIds = request.getParameterMap().get("client_id");
+                if (clientIds != null) {
+                    clientId = clientIds[0];
+                }
+            }
+        }
+
+        if (clientId == null) {
             throw new UsernameNotFoundException("客户端不存在");
         }
 
-        String clientId = authentication.getName();
-
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-
-        if (clientDetails == null) {
+        try {
+            return clientDetailsService.loadClientByClientId(clientId);
+        } catch (Exception e) {
             throw new UsernameNotFoundException("客户端不存在");
         }
-        return clientDetails;
     }
 
     /**
      * 获取用户信息
      *
      * @param path
-     * @param params
      * @return
      */
     private UserDetails getUserDetails(String path, MultiValueMap<String, String> params) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(path);
         URI uri = builder.queryParams(params).build().encode().toUri();
-        HttpHeaders httpHeaders = getHttpHeaders();
+        HttpHeaders httpHeaders = SecurityUtils.httpHeaders();
         AuthUserInfo authUserInfo = null;
         try {
             R<AuthUserInfo> r = lbRestTemplate
@@ -174,6 +162,8 @@ public class AuthUserService implements UserDetailsService, SocialDetailsService
                 authUserInfo = r.getData();
             }
         } catch (Exception e) {
+            log.error(e);
+            e.printStackTrace();
             // do nothing
         }
 

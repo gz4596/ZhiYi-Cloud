@@ -51,7 +51,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.allowFormAuthenticationForClients(); // 允许表单
+        security.allowFormAuthenticationForClients();
     }
 
     /**
@@ -117,6 +117,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 AuthUser principal = (AuthUser) authentication.getPrincipal();
                 Map<String, Object> info = new HashMap<>();
                 info.put(SecurityConstants.NICKNAME, principal.getNickname());
+                info.put(SecurityConstants.USER_ID, principal.getUsername());
                 info.putAll(principal.getAttrs());
                 ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
             }

@@ -30,13 +30,15 @@ public class SocialAuthenticationProvider implements AuthenticationProvider {
 
         Object type = socialCodeAuthenticationToken.getPrincipal();
         Object code = socialCodeAuthenticationToken.getCredentials();
+        String redirectUri = socialCodeAuthenticationToken.getRedirectUri();
 
         if (type == null || code == null) {
             log.debug("Authentication failed: no type or code provided");
             throw new BadCredentialsException("type and code must be required");
         }
 
-        UserDetails userDetails = socialDetailsService.loadUserBySocial(type.toString(), code.toString());
+        UserDetails userDetails = socialDetailsService.loadUserBySocial(type.toString(),
+                code.toString(), redirectUri);
         if (userDetails == null) {
             log.debug("Authentication failed: no credentials provided");
 

@@ -1,5 +1,7 @@
 package com.github.taoroot.cloud.auth.social;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
@@ -15,10 +17,19 @@ public class SocialCodeAuthenticationToken extends AbstractAuthenticationToken {
 
     private final Object type;
     private Object code;
+    @Setter
+    @Getter
+    private String redirectUri;
 
     // ~ Constructors
     // ===================================================================================================
-
+    public SocialCodeAuthenticationToken(String type, String code, String redirectUri) {
+        super(null);
+        this.type = type;
+        this.code = code;
+        this.redirectUri = redirectUri;
+        setAuthenticated(false);
+    }
     /**
      * This constructor can be safely used by any code that wishes to create a
      * <code>UsernamePasswordAuthenticationToken</code>, as the {@link #isAuthenticated()}

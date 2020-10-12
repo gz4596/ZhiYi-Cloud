@@ -12,12 +12,12 @@ public interface SocialLoginHandler {
      * 数据合法性校验
      * @param code 通过用户传入获取唯一标识
      */
-    Boolean check(String code);
+    Boolean check(String code, String redirectUri);
 
     /**
-     * 获取第三方的账号内容
+     * 获取第三方的账号内容 ACCESSTOKEN
      */
-    String identify(String code);
+    String identify(String code, String redirectUri);
 
     /**
      * 通过唯一标识获取用户信息
@@ -27,6 +27,6 @@ public interface SocialLoginHandler {
     /**
      * 处理方法
      */
-    AuthUserInfo handle(String code);
+    AuthUserInfo handle(String code, String redirectUri);
 
 }

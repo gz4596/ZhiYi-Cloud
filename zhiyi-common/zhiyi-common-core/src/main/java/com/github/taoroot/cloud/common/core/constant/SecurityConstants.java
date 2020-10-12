@@ -28,6 +28,7 @@ public interface SecurityConstants {
 
     String AUTH_JWT_SECRET = "jwt";
 
+    String USER_ID = "user_id";
     String ROLE_IDS = "role_ids";
     String DEPT_ID = "dept_id";
     String TENANT_ID = "tenant_id";
@@ -35,6 +36,8 @@ public interface SecurityConstants {
 
     String IMAGE_KEY_PARAM = "imageKey";
     String IMAGE_VALUE_PARAM = "imageCode";
+
+    String OAUTH2_PROXY_PARAM = "target_url";
 
     /**
      * 授权码模式code key 前缀

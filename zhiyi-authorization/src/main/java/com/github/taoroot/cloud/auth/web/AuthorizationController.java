@@ -5,8 +5,10 @@ import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.util.IdUtil;
 import com.github.taoroot.cloud.auth.social.SocialDetailsService;
+import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.core.utils.CaptchaCacheService;
 import com.github.taoroot.cloud.common.core.vo.AuthSocialInfo;
+import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.annotation.NoAuth;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -28,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -42,8 +45,6 @@ public class AuthorizationController {
 
     private final SocialDetailsService socialDetailsService;
 
-    private final HttpServletRequest httpServletRequest;
-
     /**
      * 微信开放平台只能设置一个域名,所以这里自己做了一个跳转
      * https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=authorize&connect_redirect=1#wechat_redirect
@@ -51,18 +52,24 @@ public class AuthorizationController {
      */
     @NoAuth
     @GetMapping(value = "/social/proxy/authorize")
-    public String requestWxCode(HttpSession session, String redirect_uri, String target) {
-        session.setAttribute("social_code_redirect_uri", redirect_uri);
+    public String requestWxCode(HttpSession session,
+                                String redirect_uri,
+                                @RequestParam(SecurityConstants.OAUTH2_PROXY_PARAM) String target) {
+        HttpServletRequest request = SecurityUtils.request();
 
-        if (httpServletRequest.getQueryString() != null) {
-            target = target + "?" + httpServletRequest.getQueryString();
+        if (request.getQueryString() != null) {
+            target = target + "?" + request.getQueryString();
         }
 
+        String requestURL = request.getRequestURL().toString()
+                .replace(request.getContextPath(), "/code_callback");
+
         UriComponents requestUri = UriComponentsBuilder
-                .fromUriString(target) // 指向 target
-                .replaceQueryParam("target", "0") // 删除target参数
-                .replaceQueryParam("redirect_uri", "https://auth.zhiyi.zone/code_callback") // 替换调原来的
+                .fromUriString(target) // 指向真正授权的地址
+                .replaceQueryParam(SecurityConstants.OAUTH2_PROXY_PARAM, (Object) null) // 删除target参数
+                .replaceQueryParam("redirect_uri", requestURL) // 替换调原来的 redirect_uri
                 .build();
+        session.setAttribute("social_code_redirect_uri", redirect_uri); // 保存原来的 redirect_uri
         return "redirect:" + requestUri;
     }
 
@@ -78,12 +85,18 @@ public class AuthorizationController {
         return "redirect:" + requestUri.toUriString();
     }
 
-
+    @SneakyThrows
     @GetMapping(value = "/login")
     public String login(Model model) {
-        String redirectUrl = String.format("%s://%s/social_callback", "http", "auth.zhiyi.zone");
-        List<AuthSocialInfo> socials = socialDetailsService.getSocials(redirectUrl);
-        model.addAttribute("socials", socials);
+        HttpServletRequest request = SecurityUtils.request();
+        String encode = URLEncoder.encode(request.getRequestURL().toString(), "UTF-8");
+        try {
+            List<AuthSocialInfo> socials = socialDetailsService.getSocials(encode);
+            model.addAttribute("socials", socials);
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "error";
+        }
         model.addAttribute("imageCode", IdUtil.fastSimpleUUID());
         return "login";
     }
@@ -92,8 +105,8 @@ public class AuthorizationController {
     @ResponseBody
     @SneakyThrows
     public String apiDocs() {
-        String prefix = httpServletRequest.getHeader("X-Forwarded-Prefix");
-        String host = httpServletRequest.getHeader("X-Forwarded-Host");
+        String prefix = SecurityUtils.request().getHeader("X-Forwarded-Prefix");
+        String host = SecurityUtils.request().getHeader("X-Forwarded-Host");
         DefaultResourceLoader defaultResourceLoader = new DefaultResourceLoader();
         Resource resource = defaultResourceLoader.getResource("classpath:api-docs.json");
         BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));

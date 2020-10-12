@@ -11,7 +11,7 @@ public abstract class AbstractSocialLoginHandler implements SocialLoginHandler {
      * @return 默认不校验
      */
     @Override
-    public Boolean check(String code) {
+    public Boolean check(String code, String redirectUri) {
         return true;
     }
 
@@ -22,12 +22,12 @@ public abstract class AbstractSocialLoginHandler implements SocialLoginHandler {
      * @return
      */
     @Override
-    public AuthUserInfo handle(String code) {
-        if (!check(code)) {
+    public AuthUserInfo handle(String code, String redirectUri) {
+        if (!check(code, redirectUri)) {
             return null;
         }
 
-        String identify = identify(code);
+        String identify = identify(code, redirectUri);
 
         if (StringUtils.isEmpty(identify)) {
             return null;

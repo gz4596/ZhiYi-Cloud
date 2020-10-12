@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SocialDetailsService {
 
-    UserDetails loadUserBySocial(String type, String code) throws UsernameNotFoundException;
+    UserDetails loadUserBySocial(String type, String code, String redirectUri) throws UsernameNotFoundException;
 
     List<AuthSocialInfo> getSocials(String redirectUrl);
 }

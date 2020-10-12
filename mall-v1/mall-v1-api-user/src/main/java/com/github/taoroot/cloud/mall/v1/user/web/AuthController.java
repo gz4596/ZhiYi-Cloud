@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -30,7 +31,8 @@ public class AuthController {
     @SneakyThrows
     @ApiIgnore
     @GetMapping(value = "/auth/social")
-    public R<AuthUserInfo> userInfoBySocial(String type, String code) {
+    public R<AuthUserInfo> userInfoBySocial(String type, String code,
+                                            @RequestParam(required = false, value = "redirect_uri") String redirectUri) {
         SocialLoginHandler socialLoginHandler = this.socialLoginHandler.get(type.toLowerCase());
         if (socialLoginHandler == null) {
             socialLoginHandler = this.socialLoginHandler.get(type.toUpperCase());
@@ -39,7 +41,7 @@ public class AuthController {
             log.error("SocialLoginHandler 不存在 {}", type);
             return R.errMsg(type + " 不存在");
         }
-        return R.ok(socialLoginHandler.handle(code));
+        return R.ok(socialLoginHandler.handle(code, redirectUri));
     }
 
     @ApiOperation("获取用户信息")

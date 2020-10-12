@@ -2,11 +2,13 @@ package com.github.taoroot.cloud.mall.v1.admin.service.impl;
 
 import cn.hutool.core.lang.tree.TreeUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.utils.TreeUtils;
 import com.github.taoroot.cloud.common.core.vo.AuthSocialInfo;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
+import com.github.taoroot.cloud.common.security.tenant.TenantContextHolder;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.DeptMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.SocialDetailsMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper;
@@ -19,6 +21,8 @@ import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -96,13 +100,23 @@ public class AuthServiceImpl implements AuthService {
             AuthSocialInfo socialInfo = new AuthSocialInfo();
             socialInfo.setType(social.getType());
             socialInfo.setTitle(social.getTitle());
-            String target = "0";
-            try {
-                target = URLEncoder.encode(social.getTarget(), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+
+            String redirectUri = String.format(social.getAuthorizeUri(), social.getAppId(), redirectUrl);
+
+            UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+                    .fromUriString(redirectUri)
+                    .queryParam(SecurityConstants.TENANT_ID, TenantContextHolder.get());
+
+            // 代理 code 获取
+            if (!StringUtils.isEmpty(social.getTarget())) {
+                try {
+                    uriComponentsBuilder.queryParam(SecurityConstants.OAUTH2_PROXY_PARAM,
+                            URLEncoder.encode(social.getTarget(), "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
-            socialInfo.setAuthorizeUri(String.format(social.getRedirectUri(), social.getAppId(), redirectUrl, target));
+            socialInfo.setAuthorizeUri(uriComponentsBuilder.build().toUriString());
             socialInfo.setIcon(social.getIcon());
             return socialInfo;
         }).collect(Collectors.toList());

@@ -55,6 +55,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 配置 HttpSecurity
      */
     protected void configure(HttpSecurity http) throws Exception {
+        SocialCodeAuthenticationFilter socialCodeAuthenticationFilter = new SocialCodeAuthenticationFilter();
+        socialCodeAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
         // @formatter:off
         http
                 .csrf().disable()
@@ -65,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(captchaValidationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new SocialCodeAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(socialCodeAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic();
         // @formatter:on
     }

@@ -14,6 +14,7 @@ public class SocialCodeAuthenticationFilter extends AbstractAuthenticationProces
 
     private String typeParameter = "type";
     private String codeParameter = "code";
+    private String redirectParameter = "redirect_uri";
 
     public SocialCodeAuthenticationFilter() {
         super(new AntPathRequestMatcher("/social", "POST"));
@@ -24,6 +25,7 @@ public class SocialCodeAuthenticationFilter extends AbstractAuthenticationProces
 
         String type = obtainUsername(request);
         String code = obtainPassword(request);
+        String redirect = obtainRedirect(request);
 
         if (type == null) {
             type = "";
@@ -34,9 +36,9 @@ public class SocialCodeAuthenticationFilter extends AbstractAuthenticationProces
         }
 
         type = type.trim();
-        code = type.trim();
+        code = code.trim();
 
-        SocialCodeAuthenticationToken authRequest = new SocialCodeAuthenticationToken(type, code);
+        SocialCodeAuthenticationToken authRequest = new SocialCodeAuthenticationToken(type, code, redirect);
 
         setDetails(request, authRequest);
 
@@ -49,6 +51,10 @@ public class SocialCodeAuthenticationFilter extends AbstractAuthenticationProces
 
     protected String obtainUsername(HttpServletRequest request) {
         return request.getParameter(typeParameter);
+    }
+
+    protected String obtainRedirect(HttpServletRequest request) {
+        return request.getParameter(redirectParameter);
     }
 
 

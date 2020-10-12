@@ -1,8 +1,11 @@
 package com.github.taoroot.cloud.common.security;
 
+import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.core.datascope.DataScope;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
+import com.github.taoroot.cloud.common.security.tenant.TenantContextHolder;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,5 +69,16 @@ public class SecurityUtils {
     public static HttpServletRequest request() {
         return ((ServletRequestAttributes) Objects
                 .requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+    }
+
+    public static HttpHeaders httpHeaders() {
+        HttpServletRequest request = request();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(SecurityConstants.FROM, SecurityConstants.FROM_IN);
+        httpHeaders.add(SecurityConstants.TENANT_ID, String.valueOf(TenantContextHolder.get()));
+        httpHeaders.add("X-Forwarded-For", request.getHeader("X-Forwarded-For"));
+        httpHeaders.add("X-Forwarded-Host", request.getHeader("X-Forwarded-Host"));
+        httpHeaders.add("X-Real-IP", request.getHeader("X-Real-IP"));
+        return httpHeaders;
     }
 }
