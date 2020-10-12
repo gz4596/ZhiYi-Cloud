@@ -1,6 +1,7 @@
 package com.github.taoroot.cloud.mall.v1.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -46,11 +47,21 @@ public class AdminLog extends Model<AdminLog> {
      * 操作人员
      */
     private Integer userId;
+    /**
+     * 操作人员
+     */
+    @TableField(exist = false)
+    private String userName;
 
     /**
      * 部门
      */
     private Integer deptId;
+    /**
+     * 部门
+     */
+    @TableField(exist = false)
+    private String deptName;
 
     /**
      * 请求url

@@ -16,6 +16,7 @@ public class AuthUserInfo {
     private String username;
     private String password;
     private boolean enabled = true;
+    private Integer deptId = -1;
     private List<Integer> roleIds = new ArrayList<>();
     private String[] authorities = new String[]{};
     private Map<String, Object> attrs = new HashMap<>();

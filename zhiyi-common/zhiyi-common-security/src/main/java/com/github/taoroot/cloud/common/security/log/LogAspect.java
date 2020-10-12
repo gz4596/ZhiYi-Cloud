@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.core.vo.LogInfo;
+import com.github.taoroot.cloud.common.security.AuthUser;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.annotation.Log;
 import com.github.taoroot.cloud.common.security.tenant.TenantContextHolder;
@@ -66,10 +67,20 @@ public class LogAspect {
             logInfo.setResult(objectMapper.writeValueAsString(jsonResult));
             logInfo.setUrl(request.getRequestURL().toString());
             logInfo.setTime(System.currentTimeMillis() - startTime);
-            if (jsonResult instanceof AuthUserInfo && SecurityUtils.userId() == -1) {
-                logInfo.setUserId(Integer.valueOf(((AuthUserInfo) jsonResult).getUsername()));
-            } else {
-                logInfo.setUserId(SecurityUtils.userId());
+
+            if (jsonResult instanceof R) {
+                Object data = ((R<?>) jsonResult).getData();
+                if (data instanceof AuthUserInfo && SecurityUtils.userId() == -1) {
+                    AuthUserInfo userInfo = (AuthUserInfo) data;
+                    logInfo.setUserId(Integer.valueOf(userInfo.getUsername()));
+                    logInfo.setDeptId(userInfo.getDeptId());
+                } else {
+                    logInfo.setUserId(SecurityUtils.userId());
+                    AuthUser authUser = SecurityUtils.userInfo();
+                    if (authUser != null) {
+                        logInfo.setDeptId(authUser.getDeptId());
+                    }
+                }
             }
 
             if (e != null) {

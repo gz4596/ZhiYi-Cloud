@@ -28,42 +28,18 @@ public class SecurityUtils {
         return Integer.parseInt(name);
     }
 
-    public static DataScope dataScope() {
+    public static AuthUser userInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return getDataScope(authentication);
-    }
-
-    public static DataScope getDataScope(Authentication authentication) {
         Object principal = authentication.getPrincipal();
         if (principal instanceof AuthUser) {
-            AuthUser authUser = (AuthUser) principal;
-            DataScope dataScope = new DataScope();
-            dataScope.setUserId(Integer.valueOf(authUser.getUsername()));
-            dataScope.setRoleIds(authUser.getRoleIds());
-            return dataScope;
+            return (AuthUser) principal;
         }
         return null;
     }
 
-    public static AuthUser getAuthUser(AuthUserInfo userInfo) {
-        if (userInfo == null) {
-            return null;
-        }
-        AuthUser user = new AuthUser(
-                userInfo.getUsername(),
-                userInfo.getPassword() == null ? "N/A" : userInfo.getPassword(),
-                userInfo.isEnabled(),
-                AuthorityUtils.createAuthorityList(userInfo.getAuthorities()));
-
-        if (StringUtils.isEmpty(userInfo.getNickname())) {
-            user.setNickname(userInfo.getUsername());
-        } else {
-            user.setNickname(userInfo.getNickname());
-        }
-        user.setAttrs(userInfo.getAttrs());
-        user.setDeptId(user.getDeptId());
-        user.setRoleIds(userInfo.getRoleIds());
-        return user;
+    public static DataScope dataScope() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return getDataScope(authentication);
     }
 
     public static HttpServletRequest request() {
@@ -81,4 +57,39 @@ public class SecurityUtils {
         httpHeaders.add("X-Real-IP", request.getHeader("X-Real-IP"));
         return httpHeaders;
     }
+
+    public static DataScope getDataScope(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof AuthUser) {
+            AuthUser authUser = (AuthUser) principal;
+            DataScope dataScope = new DataScope();
+            dataScope.setUserId(Integer.valueOf(authUser.getUsername()));
+            dataScope.setRoleIds(authUser.getRoleIds());
+            return dataScope;
+        }
+        return null;
+    }
+
+
+    public static AuthUser getAuthUser(AuthUserInfo userInfo) {
+        if (userInfo == null) {
+            return null;
+        }
+        AuthUser user = new AuthUser(
+                userInfo.getUsername(),
+                userInfo.getPassword() == null ? "N/A" : userInfo.getPassword(),
+                userInfo.isEnabled(),
+                AuthorityUtils.createAuthorityList(userInfo.getAuthorities()));
+
+        if (StringUtils.isEmpty(userInfo.getNickname())) {
+            user.setNickname(userInfo.getUsername());
+        } else {
+            user.setNickname(userInfo.getNickname());
+        }
+        user.setAttrs(userInfo.getAttrs());
+        user.setDeptId(userInfo.getDeptId());
+        user.setRoleIds(userInfo.getRoleIds());
+        return user;
+    }
+
 }
