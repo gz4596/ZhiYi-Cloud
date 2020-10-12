@@ -22,7 +22,7 @@ public class WeChatLoginHandler extends AbstractSocialLoginHandler {
     private final static ThreadLocal<WxMpOAuth2AccessToken> tokenThreadLocal = new ThreadLocal<>();
 
     @Override
-    public String identify(String code) {
+    public String identify(String code, String redirectUri) {
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken;
         try {
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
