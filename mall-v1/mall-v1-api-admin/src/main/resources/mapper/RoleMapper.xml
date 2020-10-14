@@ -16,7 +16,7 @@
 
     <select id="selectAuthoritiesByRole" resultType="java.lang.Integer">
         select authority_id
-        from admin_role_authority
+        from admin_role_menu
         where role_id = #{roleId};
     </select>
 

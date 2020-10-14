@@ -7,15 +7,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.taoroot.cloud.common.core.datascope.DataScopeTypeEnum;
 import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
-import com.github.taoroot.cloud.mall.v1.common.entity.AdminRole;
-import com.github.taoroot.cloud.mall.v1.common.entity.AdminRoleAuthority;
-import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.RoleAuthorityMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.RoleMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper;
 import com.github.taoroot.cloud.mall.v1.admin.service.DeptService;
-import com.github.taoroot.cloud.mall.v1.admin.service.RoleAuthorityService;
+import com.github.taoroot.cloud.mall.v1.admin.service.RoleMenuService;
 import com.github.taoroot.cloud.mall.v1.admin.service.RoleService;
+import com.github.taoroot.cloud.mall.v1.common.entity.AdminRole;
+import com.github.taoroot.cloud.mall.v1.common.entity.AdminRoleMenu;
+import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, AdminRole> implements RoleService {
 
     private final RoleMapper roleMapper;
-    private final RoleAuthorityService roleAuthorityService;
+    private final RoleMenuService roleMenuService;
     private final RoleAuthorityMapper roleAuthorityMapper;
     private final UserMapper userMapper;
     private final DeptService deptService;
@@ -79,18 +79,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, AdminRole> implemen
 
         saveOrUpdate(adminRole);
 
-        // 更新角色权限
+        // todo 更新角色权限
         if (adminRole.getAuthorities() != null) {
-            List<AdminRoleAuthority> roleMenuList = Arrays.stream(adminRole.getAuthorities()).map(menuId -> {
-                AdminRoleAuthority roleMenu = new AdminRoleAuthority();
+            List<AdminRoleMenu> roleMenuList = Arrays.stream(adminRole.getAuthorities()).map(menuId -> {
+                AdminRoleMenu roleMenu = new AdminRoleMenu();
                 roleMenu.setRoleId(adminRole.getId());
-                roleMenu.setAuthorityId(menuId);
+                roleMenu.setMenuId(menuId);
                 return roleMenu;
             }).collect(Collectors.toList());
 
-            roleAuthorityMapper.delete(Wrappers.<AdminRoleAuthority>query().lambda()
-                    .eq(AdminRoleAuthority::getRoleId, adminRole.getId()));
-            roleAuthorityService.saveBatch(roleMenuList);
+            roleAuthorityMapper.delete(Wrappers.<AdminRoleMenu>query().lambda()
+                    .eq(AdminRoleMenu::getRoleId, adminRole.getId()));
+            roleMenuService.saveBatch(roleMenuList);
         }
 
         return R.ok();

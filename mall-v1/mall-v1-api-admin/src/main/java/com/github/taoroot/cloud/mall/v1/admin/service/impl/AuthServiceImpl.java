@@ -15,7 +15,7 @@ import com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserRoleMapper;
 import com.github.taoroot.cloud.mall.v1.admin.service.AuthService;
 import com.github.taoroot.cloud.mall.v1.admin.service.UserRoleService;
-import com.github.taoroot.cloud.mall.v1.common.entity.AdminAuthority;
+import com.github.taoroot.cloud.mall.v1.common.entity.AdminMenu;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminSocialDetails;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
 import lombok.AllArgsConstructor;
@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private final SocialDetailsMapper socialDetailsMapper;
 
     @Override
-    public R userInfo() {
+    public R<Object> userInfo() {
         Integer userId = SecurityUtils.userId();
         HashMap<String, Object> result = new HashMap<>();
         AdminUser adminUser = userMapper.selectById(SecurityUtils.userId());
@@ -51,10 +51,10 @@ public class AuthServiceImpl implements AuthService {
         result.put("roles", userMapper.roles(userId));
         // 所属部门
         result.put("dept", deptMapper.selectById(adminUser.getDeptId()).getName());
-        // 功能: 1
-        result.put("functions", userMapper.authorities(userId, 1));
-        // 菜单: 0
-        List<AdminAuthority> menus = userMapper.authorities(userId, 0);
+        // 前端功能
+        result.put("functions", userMapper.menus(userId, AdminMenu.FUNCTION));
+        // 前端菜单
+        List<AdminMenu> menus = userMapper.menus(userId, AdminMenu.MENU);
         result.put("menus", TreeUtil.build(menus, TreeUtils.ROOT_PARENT_ID, (treeNode, tree) -> {
             tree.setId(treeNode.getId());
             tree.setParentId(treeNode.getParentId());
@@ -99,8 +99,7 @@ public class AuthServiceImpl implements AuthService {
         return adminSocialDetails.stream().map(social -> {
             String authorizeUri;
             String redirectUri = String.format(social.getAuthorizeUri(), social.getAppId(), redirectUrl);
-            URI uri = UriComponentsBuilder
-                    .fromUriString(redirectUri)
+            URI uri = UriComponentsBuilder.fromUriString(redirectUri)
                     .queryParam(SecurityConstants.TENANT_ID, TenantContextHolder.get()) // 加租户ID
                     .build().toUri();
             authorizeUri = uri.toString();

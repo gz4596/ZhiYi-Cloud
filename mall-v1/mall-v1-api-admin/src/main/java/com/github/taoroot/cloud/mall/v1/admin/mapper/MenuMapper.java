@@ -1,7 +1,7 @@
 package com.github.taoroot.cloud.mall.v1.admin.mapper;
 
-import com.github.taoroot.cloud.mall.v1.common.entity.AdminRoleMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.taoroot.cloud.mall.v1.common.entity.AdminMenu;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,6 +9,6 @@ import org.apache.ibatis.annotations.Mapper;
  * Date: 2020/2/11
  */
 @Mapper
-public interface RoleAuthorityMapper extends BaseMapper<AdminRoleMenu> {
+public interface MenuMapper extends BaseMapper<AdminMenu> {
 
 }

@@ -38,10 +38,10 @@
     </select>
 
 
-    <select id="authorities" resultType="com.github.taoroot.cloud.mall.v1.common.entity.AdminAuthority">
+    <select id="menus" resultType="com.github.taoroot.cloud.mall.v1.common.entity.AdminMenu">
         select distinct a.*
-        from admin_authority a,
-        admin_role_authority ar
+        from admin_menu a,
+        admin_role_menu ar
         where a.id = ar.authority_id
         <if test="type != null">
             and a.type = #{type}
@@ -58,8 +58,8 @@
 
     <select id="authorityNames" resultType="java.lang.String">
         select distinct a.authority
-        from admin_authority a,
-        admin_role_authority ar
+        from admin_menu a,
+        admin_role_menu ar
         where a.id = ar.authority_id
         <if test="type != null">
             and a.type = #{type}

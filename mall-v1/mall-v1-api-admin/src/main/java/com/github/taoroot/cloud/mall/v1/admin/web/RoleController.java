@@ -1,9 +1,9 @@
 package com.github.taoroot.cloud.mall.v1.admin.web;
 
-import com.github.taoroot.cloud.common.core.utils.R;
-import com.github.taoroot.cloud.mall.v1.common.entity.AdminRole;
-import com.github.taoroot.cloud.mall.v1.admin.service.RoleService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.taoroot.cloud.common.core.utils.R;
+import com.github.taoroot.cloud.mall.v1.admin.service.RoleService;
+import com.github.taoroot.cloud.mall.v1.common.entity.AdminRole;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping
 public class RoleController {
 
     private final RoleService roleService;

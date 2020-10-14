@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@TableName("admin_role_authority")
+@TableName("admin_role_menu")
 @EqualsAndHashCode(callSuper = true)
-public class AdminRoleAuthority extends Model<AdminRoleAuthority> {
+public class AdminRoleMenu extends Model<AdminRoleMenu> {
 
 	private static final long serialVersionUID = 1L;
 
 	private Integer roleId;
 
-	private Integer authorityId;
+	private Integer menuId;
 }

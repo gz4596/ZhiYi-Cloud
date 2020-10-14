@@ -7,18 +7,24 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@TableName("admin_authority")
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class AdminAuthority extends Model<AdminAuthority> {
+import java.time.LocalDateTime;
 
-    public static final int MENU = 0;
-    public static final int FUNCTION = 1;
+@Data
+@TableName("admin_post")
+@EqualsAndHashCode(callSuper = true)
+public class AdminPost extends Model<AdminPost> {
+    private static final long serialVersionUID = 1L;
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     private String name;
 
-    private String authority;
+    private String post;
+
+    private Integer sort;
+
+    private LocalDateTime createTime;
+
+    private LocalDateTime updateTime;
 }

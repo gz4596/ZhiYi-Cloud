@@ -7,7 +7,7 @@ import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import java.util.List;
 
 public interface AuthService {
-    R userInfo();
+    R<Object> userInfo();
 
     AuthUserInfo authByUsername(String username);
 
