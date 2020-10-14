@@ -42,7 +42,7 @@
         select distinct a.*
         from admin_menu a,
         admin_role_menu ar
-        where a.id = ar.authority_id
+        where a.id = ar.menu_id
         <if test="type != null">
             and a.type = #{type}
         </if>
@@ -57,20 +57,22 @@
 
 
     <select id="authorityNames" resultType="java.lang.String">
-        select distinct a.authority
-        from admin_menu a,
-        admin_role_menu ar
-        where a.id = ar.authority_id
-        <if test="type != null">
-            and a.type = #{type}
-        </if>
-        and ar.role_id in (
-        select r.id
-        from admin_user_role ur,
-        admin_role r
-        where r.id = ur.role_id
-        AND ur.user_id = #{userId}
-        )
+    select a.*
+    from admin_authority a,
+         admin_menu_authority ma
+    where a.id = ma.authority_id
+      and ma.menu_id in
+          (select distinct m.id
+           from admin_menu m,
+                admin_role_menu rm
+           where rm.menu_id = m.id
+             and rm.role_id in (
+               select r.id
+               from admin_user_role ur,
+                    admin_role r
+               where r.id = ur.role_id
+                 AND ur.user_id = #{userId}
+           ))
     </select>
 
     <select id="getPage" resultMap="SysUserPageVO">

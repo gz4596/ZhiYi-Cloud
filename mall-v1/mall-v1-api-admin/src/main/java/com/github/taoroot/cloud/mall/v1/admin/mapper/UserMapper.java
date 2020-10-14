@@ -27,7 +27,7 @@ public interface UserMapper extends BaseMapper<AdminUser> {
 
     List<AdminMenu> menus(@Param("userId") Integer userId, @Param("type") Integer type);
 
-    List<String> authorityNames(@Param("userId") Integer userId, @Param("type") Integer type);
+    List<String> authorityNames(@Param("userId") Integer userId);
 
     @EnableScope(scopeOwnName = "id")
     IPage<AdminUser> getPage(@Param("page") Page<AdminUser> page,

@@ -32,7 +32,7 @@ public class AuthUserService implements UserDetailsService {
         // 角色
         userInfo.setRoleIds(userMapper.roleIds(adminUser.getId()));
         // 权限
-        List<String> list = userMapper.authorityNames(adminUser.getId(), 1);
+        List<String> list = userMapper.authorityNames(adminUser.getId());
         list.addAll(userMapper.roleNames(adminUser.getId()));
         userInfo.setAuthorities(list.toArray(new String[0]));
         return SecurityUtils.getAuthUser(userInfo);
