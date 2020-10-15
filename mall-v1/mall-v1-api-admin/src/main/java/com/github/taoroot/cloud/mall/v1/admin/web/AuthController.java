@@ -32,7 +32,7 @@ public class AuthController {
      *
      * @param username 用户登录账号
      */
-    @Log(value = "账号登录")
+    @Log("账号登录")
     @NoAuth
     @SneakyThrows
     @ApiIgnore
@@ -44,9 +44,9 @@ public class AuthController {
     /**
      * 特供 Auth-Server 回调查询
      */
+    @Log("社交登录地址")
     @NoAuth
     @SneakyThrows
-    @ApiIgnore
     @GetMapping(value = "/auth/socials")
     public R<List<AuthSocialInfo>> socials(@RequestParam("redirect_uri") String redirectUri,
                                            @RequestParam(defaultValue = "true") Boolean isProxy) {
@@ -56,6 +56,7 @@ public class AuthController {
     /**
      * 特供 Auth-Server 回调查询
      */
+    @Log("社交登录")
     @NoAuth
     @SneakyThrows
     @ApiIgnore
@@ -73,8 +74,8 @@ public class AuthController {
         return R.ok(socialLoginHandler.handle(code, redirectUri));
     }
 
-
-    @ApiOperation("获取用户信息")
+    @Log("用户详情")
+    @ApiOperation("用户信息")
     @SneakyThrows
     @GetMapping(value = "/auth/user_info")
     public R userInfo() {

@@ -4,7 +4,7 @@
 
     <select id="selectByMenu" resultType="com.github.taoroot.cloud.mall.v1.common.entity.AdminAuthority">
          select
-            a.*
+            a.authority, a.name, a.path, a.method, ma.id
         from admin_menu_authority ma
         left join admin_authority a on a.id = ma.authority_id
         ${ew.customSqlSegment}

@@ -13,5 +13,6 @@ public @interface Log {
 
     public int operatorType() default 0;
 
-    public boolean isSaveRequestData() default true;
+    public boolean saveResult() default true;
+    public boolean saveParam() default true;
 }

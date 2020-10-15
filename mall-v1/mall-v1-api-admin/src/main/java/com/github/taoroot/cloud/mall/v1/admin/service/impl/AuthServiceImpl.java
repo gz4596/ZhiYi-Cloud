@@ -1,6 +1,7 @@
 package com.github.taoroot.cloud.mall.v1.admin.service.impl;
 
 import cn.hutool.core.lang.tree.TreeUtil;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.core.utils.R;
@@ -98,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
         List<AdminSocialDetails> adminSocialDetails = socialDetailsMapper.selectList(Wrappers.emptyWrapper());
         return adminSocialDetails.stream().map(social -> {
             String authorizeUri;
-            String redirectUri = String.format(social.getAuthorizeUri(), social.getAppId(), redirectUrl);
+            String redirectUri = String.format(social.getAuthorizeUri(), social.getAppId(), redirectUrl, IdUtil.fastSimpleUUID());
             URI uri = UriComponentsBuilder.fromUriString(redirectUri)
                     .queryParam(SecurityConstants.TENANT_ID, TenantContextHolder.get()) // 加租户ID
                     .build().toUri();

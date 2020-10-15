@@ -20,5 +20,9 @@ public class AdminAuthority extends Model<AdminAuthority> {
 
     private String name;
 
+    private String method;
+
+    private String path;
+
     private String authority;
 }

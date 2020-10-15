@@ -17,4 +17,5 @@ public interface MenuService extends IService<AdminMenu> {
     R<String> remove(Integer id);
 
     R<String> sort(Integer menuId, Integer offset);
+
 }

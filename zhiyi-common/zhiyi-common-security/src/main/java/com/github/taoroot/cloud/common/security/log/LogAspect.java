@@ -46,25 +46,27 @@ public class LogAspect {
 
         long startTime = System.currentTimeMillis();
         Object obj;
+        LogInfo logInfo = new LogInfo();
         try {
+            if (log.saveParam()) {
+                saveParam(point, logInfo);
+            }
             obj = point.proceed();
-            handleLog(point, log, startTime, null, obj);
+            handleLog(logInfo, point, log, startTime, null, obj);
         } catch (Exception e) {
-            handleLog(point, log, startTime, e, null);
+            handleLog(logInfo, point, log, startTime, e, null);
             throw e;
         }
         return obj;
     }
 
-    protected void handleLog(JoinPoint joinPoint, Log logAnnotation, long startTime, Exception e, Object jsonResult) {
+    protected void handleLog(LogInfo logInfo, JoinPoint joinPoint, Log logAnnotation, long startTime, Exception e, Object jsonResult) {
         ObjectMapper objectMapper = new ObjectMapper();
         HttpServletRequest request = ((ServletRequestAttributes) Objects
                 .requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         try {
-            LogInfo logInfo = new LogInfo();
             logInfo.setStatus(R.OK);
             logInfo.setIp(ServletUtil.getClientIP(request));
-            logInfo.setResult(objectMapper.writeValueAsString(jsonResult));
             logInfo.setUrl(request.getRequestURL().toString());
             logInfo.setTime(System.currentTimeMillis() - startTime);
 
@@ -96,8 +98,9 @@ public class LogAspect {
             logInfo.setBusinessType(logAnnotation.businessType());
             logInfo.setTitle(logAnnotation.value());
             logInfo.setOperatorType(logAnnotation.operatorType());
-            if (logAnnotation.isSaveRequestData()) {
-                setRequestValue(joinPoint, logInfo);
+            if (logAnnotation.saveResult()) {
+                String result = objectMapper.writeValueAsString(jsonResult);
+                logInfo.setResult(result.substring(0, Math.min(result.length(), 8000)));
             }
             Integer tenant = TenantContextHolder.get();
             logInfo.setTenantId(tenant);
@@ -108,7 +111,7 @@ public class LogAspect {
     }
 
 
-    private void setRequestValue(JoinPoint joinPoint, LogInfo logInfo) throws Exception {
+    private void saveParam(JoinPoint joinPoint, LogInfo logInfo) throws Exception {
         Object[] args = joinPoint.getArgs();
         if (args == null || args.length == 0) {
             return;
@@ -117,7 +120,8 @@ public class LogAspect {
         StringBuilder params = new StringBuilder();
         Arrays.stream(args).filter(this::isFilterObject).forEach(o -> {
             try {
-                params.append(o.toString()).append(" ");
+                String json = new ObjectMapper().writeValueAsString(o);
+                params.append(json, 0, Math.min(json.length(), 300)).append(" ");
             } catch (Exception e) {
                 // do nothing
             }
@@ -126,6 +130,7 @@ public class LogAspect {
     }
 
     public boolean isFilterObject(final Object o) {
-        return !(o instanceof MultipartFile || o instanceof HttpServletRequest || o instanceof HttpServletResponse);
+        boolean b = !(o instanceof MultipartFile || o instanceof HttpServletRequest || o instanceof HttpServletResponse);
+        return b;
     }
 }

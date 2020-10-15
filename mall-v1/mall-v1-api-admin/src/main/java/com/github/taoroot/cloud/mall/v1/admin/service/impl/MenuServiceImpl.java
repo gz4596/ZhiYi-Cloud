@@ -11,6 +11,7 @@ import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.utils.TreeUtils;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.MenuMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.RoleAuthorityMapper;
+import com.github.taoroot.cloud.mall.v1.admin.service.MenuAuthorityService;
 import com.github.taoroot.cloud.mall.v1.admin.service.MenuService;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminMenu;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminRoleMenu;
@@ -29,6 +30,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, AdminMenu> implemen
 
     private final MenuMapper menuMapper;
     private final RoleAuthorityMapper roleAuthorityMapper;
+    private final MenuAuthorityService menuAuthorityService;
 
     @Override
     public R<List<?>> getTree(String title, Boolean hidden) {
@@ -133,10 +135,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, AdminMenu> implemen
         return R.okMsg("创建成功");
     }
 
+
     @Transactional
     @Override
     public R<String> update(AdminMenu menuPut) {
-        Assert.isTrue(! menuPut.getParentId().equals(menuPut.getId()), "参数有误, 不能设置自己为上一级");
+        Assert.isTrue(!menuPut.getParentId().equals(menuPut.getId()), "参数有误, 不能设置自己为上一级");
         menuPut.setWeight(null); // 使用排序接口更新
 
         AdminMenu adminMenu = getById(menuPut);

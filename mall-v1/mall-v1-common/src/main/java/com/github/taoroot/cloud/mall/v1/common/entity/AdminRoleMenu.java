@@ -1,5 +1,7 @@
 package com.github.taoroot.cloud.mall.v1.common.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
@@ -10,9 +12,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class AdminRoleMenu extends Model<AdminRoleMenu> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Integer roleId;
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
-	private Integer menuId;
+    private Integer roleId;
+
+    private Integer menuId;
 }
