@@ -20,7 +20,7 @@ public class PostController {
 
     @Log("岗位创建")
     @ApiOperation("岗位创建")
-    @PreAuthorize("@hasAuthority('admin:post:create')")
+    @PreAuthorize("hasAuthority('admin:post:create')")
     @PostMapping("/post")
     public R create(@RequestBody AdminPost adminPost) {
         return R.ok(postService.save(adminPost));
@@ -28,7 +28,7 @@ public class PostController {
 
     @Log("岗位删除")
     @ApiOperation("岗位删除")
-    @PreAuthorize("@hasAuthority('admin:post:delete')")
+    @PreAuthorize("hasAuthority('admin:post:delete')")
     @DeleteMapping("/post")
     public R delete(@RequestParam List<Integer> ids) {
         return R.ok(postService.removeByIds(ids));
@@ -36,7 +36,7 @@ public class PostController {
 
     @Log("岗位更新")
     @ApiOperation("岗位更新")
-    @PreAuthorize("@hasAuthority('admin:post:update')")
+    @PreAuthorize("hasAuthority('admin:post:update')")
     @PutMapping("/post")
     public R updateItem(@RequestBody AdminPost adminPost) {
         return R.ok(postService.save(adminPost));
@@ -44,7 +44,7 @@ public class PostController {
 
     @Log(value = "岗位分页")
     @ApiOperation("岗位分页")
-    @PreAuthorize("@hasAuthority('admin:post:page')")
+    @PreAuthorize("hasAuthority('admin:post:page')")
     @GetMapping("/posts")
     public R getPage(Page<AdminPost> page) {
         return R.ok(postService.page(page));

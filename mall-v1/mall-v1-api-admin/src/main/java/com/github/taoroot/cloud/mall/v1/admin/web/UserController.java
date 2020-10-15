@@ -20,7 +20,7 @@ public class UserController {
 
     @Log("用户创建")
     @ApiOperation("用户创建")
-    @PreAuthorize("@hasAuthority('admin:user:create')")
+    @PreAuthorize("hasAuthority('admin:user:create')")
     @PostMapping("/user")
     public R saveItem(@RequestBody AdminUser adminUser) {
         return userService.saveOrUpdateItem(adminUser);
@@ -28,7 +28,7 @@ public class UserController {
 
     @Log("用户删除")
     @ApiOperation("用户删除")
-    @PreAuthorize("@hasAuthority('admin:user:delete')")
+    @PreAuthorize("hasAuthority('admin:user:delete')")
     @DeleteMapping("/user")
     public R delItem(@RequestParam List<Integer> ids) {
         return R.ok(userService.removeByIds(ids));
@@ -36,7 +36,7 @@ public class UserController {
 
     @Log("用户更新")
     @ApiOperation("用户更新")
-    @PreAuthorize("@hasAuthority('admin:user:update')")
+    @PreAuthorize("hasAuthority('admin:user:update')")
     @PutMapping("/user")
     public R updateItem(@RequestBody AdminUser adminUser) {
         return userService.saveOrUpdateItem(adminUser);
@@ -44,7 +44,7 @@ public class UserController {
 
     @Log(value = "用户分页")
     @ApiOperation("用户分页")
-    @PreAuthorize("@hasAuthority('admin:user:page')")
+    @PreAuthorize("hasAuthority('admin:user:page')")
     @GetMapping("/users")
     public R getPage(Page<AdminUser> page,
                      @RequestParam(required = false) String username,

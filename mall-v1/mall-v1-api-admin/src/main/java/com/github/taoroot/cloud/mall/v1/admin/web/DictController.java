@@ -27,7 +27,7 @@ public class DictController {
 
     @Log(value = "字典类型分页")
     @ApiOperation("字典类型分页")
-    @PreAuthorize("@hasAuthority('admin:dict_type:page')")
+    @PreAuthorize("hasAuthority('admin:dict_type:page')")
     @GetMapping("/types")
     public R typePage(Page<AdminDictType> page) {
         return R.ok(dictTypeService.page(page));
@@ -35,7 +35,7 @@ public class DictController {
 
     @Log("字典类型创建")
     @ApiOperation("字典类型创建")
-    @PreAuthorize("@hasAuthority('admin:dict_type:create')")
+    @PreAuthorize("hasAuthority('admin:dict_type:create')")
     @PostMapping("/type")
     public R typeCreate(@RequestBody AdminDictType adminDictType) {
         return R.ok(dictTypeService.save(adminDictType));
@@ -43,7 +43,7 @@ public class DictController {
 
     @Log("字典类型删除")
     @ApiOperation("字典类型删除")
-    @PreAuthorize("@hasAuthority('admin:dict_type:delete')")
+    @PreAuthorize("hasAuthority('admin:dict_type:delete')")
     @DeleteMapping("/type")
     public R typeDelete(@RequestParam List<Integer> ids) {
 
@@ -58,7 +58,7 @@ public class DictController {
 
     @Log("字典类型更新")
     @ApiOperation("字典类型更新")
-    @PreAuthorize("@hasAuthority('admin:dict_type:update')")
+    @PreAuthorize("hasAuthority('admin:dict_type:update')")
     @PutMapping("/type")
     public R typeUpdate(@RequestBody AdminDictType adminDictType) {
         return R.ok(dictTypeService.updateById(adminDictType));
@@ -66,7 +66,7 @@ public class DictController {
 
     @Log(value = "字典数据分页")
     @ApiOperation("字典类型分页")
-    @PreAuthorize("@hasAuthority('admin:dict_data:page')")
+    @PreAuthorize("hasAuthority('admin:dict_data:page')")
     @GetMapping("/datas")
     public R dataPage(Page<AdminDictData> page, Integer type) {
         return R.ok(dictDataService.page(page,
@@ -76,7 +76,7 @@ public class DictController {
 
     @Log("字典数据创建")
     @ApiOperation("字典类型创建")
-    @PreAuthorize("@hasAuthority('admin:dict_data:create')")
+    @PreAuthorize("hasAuthority('admin:dict_data:create')")
     @PostMapping("/data")
     public R dataCreate(@RequestBody AdminDictData adminDictData) {
         if (adminDictData.getIsDefault()) {
@@ -89,7 +89,7 @@ public class DictController {
 
     @Log("字典数据删除")
     @ApiOperation("字典类型删除")
-    @PreAuthorize("@hasAuthority('admin:dict_data:delete')")
+    @PreAuthorize("hasAuthority('admin:dict_data:delete')")
     @DeleteMapping("/data")
     public R dataDel(@RequestParam List<Integer> ids) {
         return R.ok(dictDataService.removeByIds(ids));
@@ -97,7 +97,7 @@ public class DictController {
 
     @Log("字典数据更新")
     @ApiOperation("字典类型更新")
-    @PreAuthorize("@hasAuthority('admin:dict_data:update')")
+    @PreAuthorize("hasAuthority('admin:dict_data:update')")
     @PutMapping("/data")
     public R dataUpdate(@RequestBody AdminDictData adminDictData) {
         if (adminDictData.getIsDefault()) {
@@ -110,7 +110,7 @@ public class DictController {
 
     @Log("字典类型的数据")
     @ApiOperation("字典类型的数据")
-    @PreAuthorize("@hasAuthority('admin:dict_type:data')")
+    @PreAuthorize("hasAuthority('admin:dict_type:data')")
     @GetMapping("/type/data")
     public R dataByType(@RequestParam String type,
                         @RequestParam(defaultValue = "true") Boolean keyIsNum,

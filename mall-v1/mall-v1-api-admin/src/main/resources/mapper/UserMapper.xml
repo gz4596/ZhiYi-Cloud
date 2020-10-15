@@ -57,7 +57,7 @@
 
 
     <select id="authorityNames" resultType="java.lang.String">
-    select a.*
+    select a.authority
     from admin_authority a,
          admin_menu_authority ma
     where a.id = ma.authority_id

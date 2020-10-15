@@ -20,7 +20,7 @@ public class DeptController {
 
     @Log("部门创建")
     @ApiOperation("部门创建")
-    @PreAuthorize("@hasAuthority('admin:dept:create')")
+    @PreAuthorize("hasAuthority('admin:dept:create')")
     @PostMapping("/dept")
     public R create(@RequestBody AdminDept adminDept) {
         return R.ok(deptService.save(adminDept));
@@ -28,7 +28,7 @@ public class DeptController {
 
     @Log("部门删除")
     @ApiOperation("部门删除")
-    @PreAuthorize("@hasAuthority('admin:dept:delete')")
+    @PreAuthorize("hasAuthority('admin:dept:delete')")
     @DeleteMapping("/dept")
     public R delete(@RequestParam List<Integer> ids) {
         return R.ok(deptService.removeByIds(ids));
@@ -36,7 +36,7 @@ public class DeptController {
 
     @Log("部门详情")
     @ApiOperation("部门详情")
-    @PreAuthorize("@hasAuthority('admin:dept:get')")
+    @PreAuthorize("hasAuthority('admin:dept:get')")
     @GetMapping("/dept/{id}")
     public R get(@PathVariable Integer id) {
         return R.ok(deptService.getById(id));
@@ -44,7 +44,7 @@ public class DeptController {
 
     @Log("部门更新")
     @ApiOperation("部门更新")
-    @PreAuthorize("@hasAuthority('admin:dept:update')")
+    @PreAuthorize("hasAuthority('admin:dept:update')")
     @PutMapping("/dept")
     public R updateItem(@RequestBody AdminDept adminDept) {
         if (adminDept.getParentId().equals(adminDept.getId())) {
@@ -55,7 +55,7 @@ public class DeptController {
 
     @Log(value = "部门所有")
     @ApiOperation("部门属性")
-    @PreAuthorize("@hasAuthority('admin:dept:page')")
+    @PreAuthorize("hasAuthority('admin:dept:page')")
     @GetMapping("/depts")
     public R getPage(@RequestParam(defaultValue = "" + TreeUtils.ROOT_PARENT_ID) Integer parentId,
                      @RequestParam(required = false) String name) {

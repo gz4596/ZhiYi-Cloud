@@ -19,7 +19,7 @@ public class AuthorityController {
 
     @Log(value = "权限分页")
     @ApiOperation("权限分页")
-    @PreAuthorize("@hasAuthority('admin:authority:page')")
+    @PreAuthorize("hasAuthority('admin:authority:page')")
     @GetMapping("/authoritys")
     public R getPage(Page<AdminAuthority> page) {
         return R.ok(authorityService.page(page));

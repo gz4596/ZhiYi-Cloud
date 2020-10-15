@@ -20,7 +20,7 @@ public class RoleController {
 
     @Log("角色创建")
     @ApiOperation("角色创建")
-    @PreAuthorize("@hasAuthority('admin:role:create')")
+    @PreAuthorize("hasAuthority('admin:role:create')")
     @PostMapping("/role")
     public R create(@RequestBody AdminRole adminRole) {
         return R.ok(roleService.saveOrUpdateItem(adminRole));
@@ -29,7 +29,7 @@ public class RoleController {
 
     @Log("角色删除")
     @ApiOperation("角色删除")
-    @PreAuthorize("@hasAuthority('admin:role:delete')")
+    @PreAuthorize("hasAuthority('admin:role:delete')")
     @DeleteMapping("/role")
     public R delete(@RequestParam List<Integer> ids) {
         return R.ok(roleService.removeByIds(ids));
@@ -38,7 +38,7 @@ public class RoleController {
 
     @Log("角色更新")
     @ApiOperation("角色更新")
-    @PreAuthorize("@hasAuthority('admin:role:update')")
+    @PreAuthorize("hasAuthority('admin:role:update')")
     @PutMapping("/role")
     public R update(@RequestBody AdminRole adminRole) {
         return roleService.saveOrUpdateItem(adminRole);
@@ -47,7 +47,7 @@ public class RoleController {
 
     @Log(value = "角色分页")
     @ApiOperation("角色分页")
-    @PreAuthorize("@hasAuthority('admin:role:page')")
+    @PreAuthorize("hasAuthority('admin:role:page')")
     @GetMapping("/roles")
     public R page(Page<AdminRole> page) {
         return roleService.getPage(page);

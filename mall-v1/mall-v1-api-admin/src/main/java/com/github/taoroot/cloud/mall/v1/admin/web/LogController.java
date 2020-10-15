@@ -22,7 +22,7 @@ public class LogController {
 
     @Log(value = "日志分页")
     @ApiOperation("日志分页")
-    @PreAuthorize("@hasAuthority('admin:log:page')")
+    @PreAuthorize("hasAuthority('admin:log:page')")
     @GetMapping("/logs")
     public R getPage(Page<AdminLog> page) {
         return R.ok(logMapper.getPage(page, Wrappers.emptyWrapper()));

@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.method.HandlerMethod;
@@ -26,6 +27,7 @@ import java.util.*;
 @AllArgsConstructor
 @Log4j2
 @EnableConfigurationProperties(SecurityIgnoreProperties.class)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityPermitAllConfigurer extends WebSecurityConfigurerAdapter {
 
     private final SecurityIgnoreProperties securityIgnoreProperties;
