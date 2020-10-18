@@ -58,6 +58,7 @@ public class AuthController {
     /**
      * 特供 Auth-Server 回调查询
      */
+    @PermitAll
     @Log("社交登录")
     @SneakyThrows
     @ApiIgnore
