@@ -103,9 +103,7 @@ public class PermitAllValidateFilter extends OncePerRequestFilter {
 
         log.info(expectedTokenSignature);
         if (!equals(expectedTokenSignature, cookieTokens[2])) {
-            throw new InvalidCookieException("Cookie token[1] has expired (expired on '"
-                    + new Date(tokenExpiryTime) + "'; current time is '" + new Date()
-                    + "')");
+            throw new InvalidCookieException("Cookie expired");
         }
 
     }
@@ -143,9 +141,6 @@ public class PermitAllValidateFilter extends OncePerRequestFilter {
     }
 
     public String getKey() {
-        if (key.length() > 10) {
-            return key.substring(0, 10);
-        }
         return key;
     }
 

@@ -12,9 +12,6 @@ import org.springframework.security.oauth2.provider.token.store.redis.JdkSeriali
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy;
 import org.springframework.stereotype.Component;
 
-/**
- * 授权码模式支持集群
- */
 @Component
 @RequiredArgsConstructor
 public class CacheAuthorizationCodeServices extends RandomValueAuthorizationCodeServices {
@@ -27,11 +24,6 @@ public class CacheAuthorizationCodeServices extends RandomValueAuthorizationCode
 	@Setter
 	private RedisTokenStoreSerializationStrategy serializationStrategy = new JdkSerializationStrategy();
 
-	/**
-	 * 保存 code 和 认证信息
-	 * @param code 授权码模式： code
-	 * @param authentication 认证信息
-	 */
 	@Override
 	protected void store(String code, OAuth2Authentication authentication) {
 		@Cleanup
@@ -39,10 +31,6 @@ public class CacheAuthorizationCodeServices extends RandomValueAuthorizationCode
 		connection.set(serializationStrategy.serialize(prefix + code), serializationStrategy.serialize(authentication));
 	}
 
-	/**
-	 * 删除code 并返回认证信息
-	 * @param code 授权码模式： code
-	 */
 	@Override
 	protected OAuth2Authentication remove(String code) {
 		@Cleanup

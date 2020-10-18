@@ -21,8 +21,6 @@ public interface SecurityConstants {
 
     String AUTH_SOCIAL_LIST_PATH = "socialAuthListPath";
 
-    String AUTH_JWT_SECRET = "jwt";
-
     String USER_ID = "user_id";
     String ROLE_IDS = "role_ids";
     String DEPT_ID = "dept_id";

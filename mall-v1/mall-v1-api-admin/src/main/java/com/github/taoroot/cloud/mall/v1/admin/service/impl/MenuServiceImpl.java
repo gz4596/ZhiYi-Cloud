@@ -142,7 +142,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, AdminMenu> implemen
         Assert.isTrue(!menuPut.getParentId().equals(menuPut.getId()), "参数有误, 不能设置自己为上一级");
         menuPut.setWeight(null); // 使用排序接口更新
 
-        AdminMenu adminMenu = getById(menuPut);
+        AdminMenu adminMenu = getById(menuPut.getParentId());
         Assert.notNull(adminMenu, "菜单不存在");
 
         if (TreeUtils.ROOT_PARENT_ID != adminMenu.getParentId()) {
@@ -162,7 +162,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, AdminMenu> implemen
         if (entity.getParentId() != TreeUtils.ROOT_PARENT_ID) {
             AdminMenu parent = getById(entity.getParentId());
             Assert.notNull(parent, "父级不存在");
-            Assert.isTrue(AdminMenu.FUNCTION.equals(parent.getType()), "功能不能包含菜单");
+            Assert.isTrue(AdminMenu.MENU.equals(parent.getType()), "功能不能包含菜单");
         }
 
 
@@ -170,10 +170,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, AdminMenu> implemen
 
 
         int index = count(Wrappers.<AdminMenu>lambdaQuery()
+                .eq(AdminMenu::getParentId, entity.getParentId())
                 .orderByAsc(AdminMenu::getWeight));
 
         // 重新排序(插入最后)
-        sort(entity.getId(), index);
+        sort(entity.getId(), index - 1);
 
         return R.okMsg("创建成功");
     }

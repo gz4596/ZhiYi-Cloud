@@ -32,10 +32,7 @@ mybatis-plus:
 security:
   oauth2:
     resource:
-      jwt:
-        key-value: mall-v1-api-admin-jwt-secret
-  ignore:
-    key: 1234567
+      id: mall-v1-api-admin
 
 logging:
   level:

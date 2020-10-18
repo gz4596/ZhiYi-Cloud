@@ -53,7 +53,9 @@ public class AuthServiceImpl implements AuthService {
         // 所属部门
         result.put("dept", deptMapper.selectById(adminUser.getDeptId()).getName());
         // 前端功能
-        result.put("functions", userMapper.menus(userId, AdminMenu.FUNCTION));
+        List<String> functions = userMapper.menus(userId, AdminMenu.FUNCTION).stream()
+                .map(AdminMenu::getAuthority).collect(Collectors.toList());
+        result.put("functions", functions);
         // 前端菜单
         List<AdminMenu> menus = userMapper.menus(userId, AdminMenu.MENU);
         result.put("menus", TreeUtil.build(menus, TreeUtils.ROOT_PARENT_ID, (treeNode, tree) -> {

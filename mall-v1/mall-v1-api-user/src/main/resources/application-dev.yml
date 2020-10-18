@@ -26,5 +26,4 @@ mybatis-plus:
 security:
   oauth2:
     resource:
-      jwt:
-        key-value: mall-v1-api-user-jwt-secret
+      id: mall-v1-api-user

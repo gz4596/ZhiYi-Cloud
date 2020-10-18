@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.taoroot.cloud.auth.exception.CustomWebResponseExceptionTranslator;
 import com.github.taoroot.cloud.auth.service.AuthUserService;
 import com.github.taoroot.cloud.auth.service.CacheClientDetailsService;
-import com.github.taoroot.cloud.auth.service.JwtSignerService;
 import com.github.taoroot.cloud.auth.social.SocialCodeTokenGranter;
 import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.core.utils.CaptchaCacheService;
@@ -13,10 +12,13 @@ import com.github.taoroot.cloud.common.security.AuthUser;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.oauth.AuthUserAuthenticationConverter;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.jwt.crypto.sign.MacSigner;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
@@ -46,17 +48,18 @@ import java.util.Map;
 @Configuration
 @AllArgsConstructor
 @EnableAuthorizationServer
+@Import({AuthorizationServerProperties.class})
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     private final AuthenticationManager authenticationManager;
 
     private final AuthUserService userDetailsService;
 
-    private final JwtSignerService jwtSignerService;
-
     private final CacheClientDetailsService cacheClientDetailsService;
 
     private final CaptchaCacheService captchaCacheService;
+
+    private final AuthorizationServerProperties authorizationServerProperties;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -139,14 +142,14 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         return enhancerChain;
     }
 
+    @SuppressWarnings("deprecation")
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         DefaultAccessTokenConverter accessTokenConverter = (DefaultAccessTokenConverter) jwtAccessTokenConverter
                 .getAccessTokenConverter();
         accessTokenConverter.setUserTokenConverter(new AuthUserAuthenticationConverter());
-
         // 代理不同的 client JWT 密钥
-        jwtAccessTokenConverter.setSigner(jwtSignerService);
+        jwtAccessTokenConverter.setSigner(new MacSigner(authorizationServerProperties.getJwt().getKeyValue()));
         return jwtAccessTokenConverter;
     }
 
