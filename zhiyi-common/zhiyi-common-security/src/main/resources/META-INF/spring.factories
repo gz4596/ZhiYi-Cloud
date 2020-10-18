@@ -1,8 +1,8 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.taoroot.cloud.common.security.config.WebSecurityPermitAllConfigurer, \
+  com.github.taoroot.cloud.common.security.config.WebSecurityConfigurer, \
   com.github.taoroot.cloud.common.security.config.JwtAccessTokenConverterConfigurer, \
   com.github.taoroot.cloud.common.security.config.LogAutoConfiguration, \
-  com.github.taoroot.cloud.common.security.tenant.TenantContextHolderFilter, \
   com.github.taoroot.cloud.common.security.config.RestTemplateConfigure, \
+  com.github.taoroot.cloud.common.security.config.ResourceServerConfigurer, \
   cn.hutool.extra.spring.SpringUtil
 

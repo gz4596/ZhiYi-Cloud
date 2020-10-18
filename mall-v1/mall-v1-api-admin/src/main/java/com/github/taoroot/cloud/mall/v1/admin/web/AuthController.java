@@ -4,9 +4,10 @@ import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.vo.AuthSocialInfo;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.annotation.Log;
-import com.github.taoroot.cloud.common.security.annotation.NoAuth;
+import com.github.taoroot.cloud.common.security.annotation.PermitAll;
 import com.github.taoroot.cloud.common.security.social.SocialLoginHandler;
 import com.github.taoroot.cloud.mall.v1.admin.service.AuthService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -22,6 +23,7 @@ import java.util.Map;
 @Log4j2
 @RestController
 @AllArgsConstructor
+@Api(tags = "登录管理")
 public class AuthController {
 
     private final AuthService authservice;
@@ -33,7 +35,7 @@ public class AuthController {
      * @param username 用户登录账号
      */
     @Log("账号登录")
-    @NoAuth
+    @PermitAll(global = false)
     @SneakyThrows
     @ApiIgnore
     @GetMapping(value = "/auth/username")
@@ -45,7 +47,7 @@ public class AuthController {
      * 特供 Auth-Server 回调查询
      */
     @Log("社交登录地址")
-    @NoAuth
+    @PermitAll
     @SneakyThrows
     @GetMapping(value = "/auth/socials")
     public R<List<AuthSocialInfo>> socials(@RequestParam("redirect_uri") String redirectUri,
@@ -57,7 +59,6 @@ public class AuthController {
      * 特供 Auth-Server 回调查询
      */
     @Log("社交登录")
-    @NoAuth
     @SneakyThrows
     @ApiIgnore
     @GetMapping(value = "/auth/social")

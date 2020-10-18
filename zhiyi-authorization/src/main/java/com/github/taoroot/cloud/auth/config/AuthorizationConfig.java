@@ -1,17 +1,22 @@
 package com.github.taoroot.cloud.auth.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.taoroot.cloud.auth.exception.CustomWebResponseExceptionTranslator;
 import com.github.taoroot.cloud.auth.service.AuthUserService;
 import com.github.taoroot.cloud.auth.service.CacheClientDetailsService;
 import com.github.taoroot.cloud.auth.service.JwtSignerService;
 import com.github.taoroot.cloud.auth.social.SocialCodeTokenGranter;
 import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.core.utils.CaptchaCacheService;
+import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.security.AuthUser;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.oauth.AuthUserAuthenticationConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
@@ -26,6 +31,10 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +60,9 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.authenticationEntryPoint(AuthorizationConfig::commence);
         security.allowFormAuthenticationForClients();
+
     }
 
     /**
@@ -61,6 +72,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         // @formatter:off
         endpoints
+                .exceptionTranslator(new CustomWebResponseExceptionTranslator())
                 .tokenEnhancer(tokenEnhancer())
                 .accessTokenConverter(jwtAccessTokenConverter())
                 .userDetailsService(userDetailsService)   // refresh_token 模式,通过用户名,放回用户信息
@@ -136,6 +148,16 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         // 代理不同的 client JWT 密钥
         jwtAccessTokenConverter.setSigner(jwtSignerService);
         return jwtAccessTokenConverter;
+    }
+
+    private static void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+        if (!response.isCommitted()) {
+            response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(HttpServletResponse.SC_OK);
+            R<String> r = R.errMsg(authException.getMessage());
+            response.getWriter().write(new ObjectMapper().writeValueAsString(r));
+        }
     }
 
 }

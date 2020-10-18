@@ -2,7 +2,7 @@ package com.github.taoroot.cloud.mall.v1.user.web;
 
 import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
-import com.github.taoroot.cloud.common.security.annotation.NoAuth;
+import com.github.taoroot.cloud.common.security.annotation.PermitAll;
 import com.github.taoroot.cloud.common.security.social.SocialLoginHandler;
 import com.github.taoroot.cloud.mall.v1.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +27,7 @@ public class AuthController {
     /**
      * 特供 Auth-Server 回调查询
      */
-    @NoAuth
+    @PermitAll
     @SneakyThrows
     @ApiIgnore
     @GetMapping(value = "/auth/social")

@@ -1,6 +1,5 @@
 package com.github.taoroot.cloud.mall.v1.admin.component;
 
-import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties;
 import com.github.taoroot.cloud.common.core.vo.LogInfo;
 import com.github.taoroot.cloud.common.security.log.LogSaveService;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.LogMapper;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 public class LogInfoService implements LogSaveService {
 
     private final LogMapper logMapper;
-    private final DynamicDataSourceProperties dynamicDataSourceProperties;
 
     @Override
     public void save(LogInfo logInfo) {

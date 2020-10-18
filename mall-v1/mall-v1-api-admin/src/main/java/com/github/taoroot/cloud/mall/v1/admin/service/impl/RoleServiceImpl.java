@@ -80,8 +80,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, AdminRole> implemen
         saveOrUpdate(adminRole);
 
         // todo 更新角色权限
-        if (adminRole.getAuthorities() != null) {
-            List<AdminRoleMenu> roleMenuList = Arrays.stream(adminRole.getAuthorities()).map(menuId -> {
+        if (adminRole.getMenus() != null) {
+            List<AdminRoleMenu> roleMenuList = Arrays.stream(adminRole.getMenus()).map(menuId -> {
                 AdminRoleMenu roleMenu = new AdminRoleMenu();
                 roleMenu.setRoleId(adminRole.getId());
                 roleMenu.setMenuId(menuId);

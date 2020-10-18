@@ -37,5 +37,5 @@ public class AdminRole extends Model<AdminRole> {
     private Integer[] scope;
 
     @TableField(exist = false)
-    private Integer[] authorities;
+    private Integer[] menus;
 }

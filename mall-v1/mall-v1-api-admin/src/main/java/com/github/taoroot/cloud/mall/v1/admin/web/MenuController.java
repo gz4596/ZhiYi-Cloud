@@ -9,6 +9,7 @@ import com.github.taoroot.cloud.mall.v1.admin.service.MenuAuthorityService;
 import com.github.taoroot.cloud.mall.v1.admin.service.MenuService;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminAuthority;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminMenu;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import java.util.List;
 @ApiOperation("菜单")
 @RestController
 @AllArgsConstructor
+@Api(tags = "菜单管理")
 public class MenuController {
     private final MenuService menuService;
     private final AuthorityService authorityService;

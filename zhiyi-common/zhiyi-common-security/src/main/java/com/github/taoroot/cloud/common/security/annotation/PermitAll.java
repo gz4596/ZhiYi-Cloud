@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface NoAuth {
+public @interface PermitAll {
 
     /**
      * 默认全局无需鉴权,  如果改成 false, 则代表只允许内部

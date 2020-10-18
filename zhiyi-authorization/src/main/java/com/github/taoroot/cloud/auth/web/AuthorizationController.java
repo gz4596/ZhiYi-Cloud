@@ -8,7 +8,7 @@ import com.github.taoroot.cloud.auth.social.SocialDetailsService;
 import com.github.taoroot.cloud.common.core.utils.CaptchaCacheService;
 import com.github.taoroot.cloud.common.core.vo.AuthSocialInfo;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
-import com.github.taoroot.cloud.common.security.annotation.NoAuth;
+import com.github.taoroot.cloud.common.security.annotation.PermitAll;
 import com.github.taoroot.cloud.common.security.social.SocialType;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@PermitAll
 @Controller
 @AllArgsConstructor
 public class AuthorizationController {
@@ -38,7 +39,7 @@ public class AuthorizationController {
 
     private final SocialDetailsService socialDetailsService;
 
-    @NoAuth
+    @PermitAll
     @SneakyThrows
     @GetMapping(value = "/auth-redirect")
     public String authRedirect(Model model) {
@@ -65,7 +66,7 @@ public class AuthorizationController {
         return "login";
     }
 
-    @NoAuth
+    @PermitAll
     @GetMapping(value = "/captcha/image")
     public void getImage(HttpServletResponse response, @RequestParam("key") String key) throws Exception {
         response.setDateHeader("Expires", 0);

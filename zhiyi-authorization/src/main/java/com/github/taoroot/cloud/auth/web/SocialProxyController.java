@@ -2,7 +2,7 @@ package com.github.taoroot.cloud.auth.web;
 
 import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
-import com.github.taoroot.cloud.common.security.annotation.NoAuth;
+import com.github.taoroot.cloud.common.security.annotation.PermitAll;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ public class SocialProxyController {
      * https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=authorize&connect_redirect=1#wechat_redirect
      * https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxfc4b369dbf9c4d95&redirect_uri=http%3A%2F%2Flocalhost%3A9528%2F%23%2Fauth-redirect&response_type=code&scope=snsapi_userinfo&state=authorize&connect_redirect=1#wechat_redirect
      */
-    @NoAuth
+    @PermitAll
     @GetMapping(value = "/social/proxy/authorize")
     public String requestWxCode(HttpSession session,
                                 String redirect_uri,
@@ -45,7 +45,7 @@ public class SocialProxyController {
         return "redirect:" + requestUri;
     }
 
-    @NoAuth
+    @PermitAll
     @GetMapping(value = "/code_callback")
     public String callbackWxCode(String code, String state, HttpSession session) {
         String wxRedirectUri = (String) session.getAttribute("social_code_redirect_uri");

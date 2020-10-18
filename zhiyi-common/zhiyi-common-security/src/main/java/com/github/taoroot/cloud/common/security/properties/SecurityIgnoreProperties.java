@@ -10,6 +10,8 @@ import java.util.List;
 @ConfigurationProperties(prefix = "security.ignore")
 public class SecurityIgnoreProperties {
 
+    private String key = "1234567";
+
     private List<String> defaultUrls = new ArrayList<>();
 
     private List<String> urls = new ArrayList<>();

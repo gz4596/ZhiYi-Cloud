@@ -5,6 +5,7 @@ import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.security.annotation.Log;
 import com.github.taoroot.cloud.mall.v1.admin.service.PostService;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminPost;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@Api(tags = "岗位管理")
 public class PostController {
 
     private final PostService postService;

@@ -34,4 +34,5 @@ spring:
             - Path=/mall/v1/admin/**
           filters:
             - StripPrefix=3
+            - AddRequestHeader=preview_tenant, 2
             - SwaggerHeaderFilter

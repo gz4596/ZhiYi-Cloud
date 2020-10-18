@@ -2,14 +2,9 @@ package com.github.taoroot.cloud.common.core.constant;
 
 public interface SecurityConstants {
     /**
-     * 内部
-     */
-    String FROM_IN = "Y";
-
-    /**
      * 标志
      */
-    String FROM = "from";
+    String INTERNAL_AUTHORIZATION = "Internal_Authorization";
 
     /**
      * 实时查询用户接口

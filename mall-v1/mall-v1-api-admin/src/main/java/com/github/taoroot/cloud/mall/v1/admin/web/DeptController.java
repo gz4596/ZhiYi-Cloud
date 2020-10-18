@@ -5,6 +5,7 @@ import com.github.taoroot.cloud.common.core.utils.TreeUtils;
 import com.github.taoroot.cloud.common.security.annotation.Log;
 import com.github.taoroot.cloud.mall.v1.admin.service.DeptService;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminDept;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@Api(tags = "部门管理")
 public class DeptController {
 
     private final DeptService deptService;

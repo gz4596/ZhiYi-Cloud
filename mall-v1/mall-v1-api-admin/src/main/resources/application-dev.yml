@@ -34,6 +34,8 @@ security:
     resource:
       jwt:
         key-value: mall-v1-api-admin-jwt-secret
+  ignore:
+    key: 1234567
 
 logging:
   level:

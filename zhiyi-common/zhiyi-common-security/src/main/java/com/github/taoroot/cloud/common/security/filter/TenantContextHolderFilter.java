@@ -1,16 +1,15 @@
-package com.github.taoroot.cloud.common.security.tenant;
+package com.github.taoroot.cloud.common.security.filter;
 
 import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.core.datascope.DataScopeContextHolder;
+import com.github.taoroot.cloud.common.security.tenant.TenantContextHolder;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -21,9 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Log4j2
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
-@EnableConfigurationProperties(TenantDataSourceProperties.class)
+@Order(Ordered.HIGHEST_PRECEDENCE + 10)
 public class TenantContextHolderFilter extends GenericFilterBean {
 
     RequestCache requestCache = new HttpSessionRequestCache();

@@ -6,6 +6,7 @@ import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.security.annotation.Log;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.LogMapper;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminLog;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @RequestMapping
+@Api(tags = "日志管理")
 public class LogController {
 
     private final LogMapper logMapper;

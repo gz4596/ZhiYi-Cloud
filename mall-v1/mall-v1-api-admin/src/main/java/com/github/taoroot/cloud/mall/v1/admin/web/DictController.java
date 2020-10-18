@@ -8,6 +8,7 @@ import com.github.taoroot.cloud.mall.v1.admin.service.DictDataService;
 import com.github.taoroot.cloud.mall.v1.admin.service.DictTypeService;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminDictData;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminDictType;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/dict")
 @AllArgsConstructor
+@Api(tags = "字典管理")
 public class DictController {
 
     private final DictTypeService dictTypeService;
