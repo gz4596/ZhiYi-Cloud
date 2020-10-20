@@ -3,6 +3,7 @@ package com.github.taoroot.cloud.mall.v1.user.social;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.social.AbstractSocialLoginHandler;
+import com.github.taoroot.cloud.common.security.social.SocialUser;
 import com.github.taoroot.cloud.mall.v1.common.entity.MallUser;
 import com.github.taoroot.cloud.mall.v1.user.mapper.UserMapper;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class WeChatLoginHandler extends AbstractSocialLoginHandler {
     private final static ThreadLocal<WxMpOAuth2AccessToken> tokenThreadLocal = new ThreadLocal<>();
 
     @Override
-    public String identify(String code, String redirectUri) {
+    public String getToken(String code, String redirectUri) {
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken;
         try {
             wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
@@ -35,14 +36,21 @@ public class WeChatLoginHandler extends AbstractSocialLoginHandler {
     }
 
     @Override
-    public AuthUserInfo info(String openId) {
+    public SocialUser loadSocialUser(String token) {
+        SocialUser socialUser = new SocialUser();
+        socialUser.setUsername(token);
+        return socialUser;
+    }
+
+    @Override
+    public AuthUserInfo loadAuthUserInfo(SocialUser socialUser) {
         MallUser user = userMapper.selectOne(Wrappers
                 .<MallUser>lambdaQuery()
-                .eq(MallUser::getOpenid, openId));
+                .eq(MallUser::getOpenid, socialUser.getName()));
 
         if (user == null) {
             user = new MallUser();
-            user.setOpenid(openId);
+            user.setOpenid(socialUser.getName());
             try {
                 // 新用户完善用户信息. 如果用户拒绝授权,平台将看不到用户头像信息
                 WxMpOAuth2AccessToken wxMpOAuth2AccessToken = tokenThreadLocal.get();

@@ -3,30 +3,17 @@ package com.github.taoroot.cloud.common.security.social;
 
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 
-/**
- * 第三方授权登录处理器
- */
 public interface SocialLoginHandler {
 
-    /***
-     * 数据合法性校验
-     * @param code 通过用户传入获取唯一标识
-     */
-    Boolean check(String code, String redirectUri);
 
-    /**
-     * 获取第三方的账号内容 ACCESSTOKEN
-     */
-    String identify(String code, String redirectUri);
+    Boolean checkParams(String code, String redirectUri);
 
-    /**
-     * 通过唯一标识获取用户信息
-     */
-    AuthUserInfo info(String identify);
+    String getToken(String code, String redirectUri);
 
-    /**
-     * 处理方法
-     */
+    SocialUser loadSocialUser(String token);
+
+    AuthUserInfo loadAuthUserInfo(SocialUser socialUser);
+
     AuthUserInfo handle(String code, String redirectUri);
 
 }

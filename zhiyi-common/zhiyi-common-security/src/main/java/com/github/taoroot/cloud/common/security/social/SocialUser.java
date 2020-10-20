@@ -1,10 +1,21 @@
 package com.github.taoroot.cloud.common.security.social;
 
+import lombok.Data;
 import org.springframework.security.core.AuthenticatedPrincipal;
 
-import java.util.Map;
+@Data
+public class SocialUser implements AuthenticatedPrincipal {
 
-public interface SocialUser extends AuthenticatedPrincipal {
+    private String accessToken;
 
-    Map<String, Object> attrs();
+    private String username;
+
+    private String nickname;
+
+    private String avatar;
+
+    @Override
+    public String getName() {
+        return username;
+    }
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.social.AbstractSocialLoginHandler;
 import com.github.taoroot.cloud.common.security.social.SocialType;
+import com.github.taoroot.cloud.common.security.social.SocialUser;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.SocialDetailsMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserSocialMapper;
@@ -34,7 +35,7 @@ public class WxOpenLoginHandler extends AbstractSocialLoginHandler {
     private final UserSocialMapper userSocialMapper;
 
     @Override
-    public String identify(String code, String redirectUri) {
+    public String getToken(String code, String redirectUri) {
         AdminSocialDetails socialDetails = socialDetailsMapper
                 .selectOne(Wrappers.<AdminSocialDetails>lambdaQuery().eq(AdminSocialDetails::getType, SocialType.WX_OPEN));
         String uri = String.format(SocialType.WX_OPEN_ACCESS_TOKEN_URL,
@@ -57,10 +58,17 @@ public class WxOpenLoginHandler extends AbstractSocialLoginHandler {
     }
 
     @Override
-    public AuthUserInfo info(String openId) {
+    public SocialUser loadSocialUser(String openId) {
+        SocialUser socialUser = new SocialUser();
+        socialUser.setUsername(openId);
+        return socialUser;
+    }
+
+    @Override
+    public AuthUserInfo loadAuthUserInfo(SocialUser socialUser) {
         AdminUserSocial userSocial = userSocialMapper.selectOne(Wrappers.<AdminUserSocial>lambdaQuery()
                 .eq(AdminUserSocial::getSocialType, SocialType.WX_OPEN)
-                .eq(AdminUserSocial::getSocialId, openId));
+                .eq(AdminUserSocial::getSocialId, socialUser.getName()));
 
         if (userSocial == null) {
             return null;

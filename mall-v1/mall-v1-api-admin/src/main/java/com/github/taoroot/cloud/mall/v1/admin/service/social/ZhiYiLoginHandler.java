@@ -7,6 +7,7 @@ import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.social.AbstractSocialLoginHandler;
 import com.github.taoroot.cloud.common.security.social.SocialType;
+import com.github.taoroot.cloud.common.security.social.SocialUser;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.SocialDetailsMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminSocialDetails;
@@ -30,12 +31,12 @@ public class ZhiYiLoginHandler extends AbstractSocialLoginHandler {
     private final RestTemplate restTemplate;
 
     @Override
-    public Boolean check(String code, String redirectUri) {
-        return StringUtils.isNotBlank(code) && StringUtils.isNotBlank(redirectUri) ;
+    public Boolean checkParams(String code, String redirectUri) {
+        return StringUtils.isNotBlank(code) && StringUtils.isNotBlank(redirectUri);
     }
 
     @Override
-    public String identify(String code, String redirectUri) {
+    public String getToken(String code, String redirectUri) {
         AdminSocialDetails socialDetails = socialDetailsMapper
                 .selectOne(Wrappers.<AdminSocialDetails>lambdaQuery().eq(AdminSocialDetails::getType, SocialType.ZHIYI));
         String uri = String.format(SocialType.ZHIYI_ACCESS_TOKEN_URL,
@@ -50,15 +51,23 @@ public class ZhiYiLoginHandler extends AbstractSocialLoginHandler {
         log.debug("{}:{} --> {}", SocialType.ZHIYI, code, body);
 
         if (body == null) {
-            return "-1";
+            return null;
         }
 
         return (String) body.get(SecurityConstants.USER_ID);
     }
 
+
     @Override
-    public AuthUserInfo info(String openId) {
-        AdminUser user = userMapper.selectById(openId);
+    public SocialUser loadSocialUser(String token) {
+        SocialUser socialUser = new SocialUser();
+        socialUser.setUsername(token);
+        return socialUser;
+    }
+
+    @Override
+    public AuthUserInfo loadAuthUserInfo(SocialUser socialUser) {
+        AdminUser user = userMapper.selectById(socialUser.getName());
         AuthUserInfo authUserInfo = new AuthUserInfo();
         authUserInfo.setUsername(String.valueOf(user.getId()));
         authUserInfo.setNickname(user.getNickname());
