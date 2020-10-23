@@ -46,7 +46,7 @@ start_application() {
     echo ${JAR_NAME}
     cd ${APP_HOME}
     echo ${NACOS_HOST}
-    nohup java -jar -Xms850m -Xmn850m ${JAR_NAME} --spring.profiles.active=test --spring.cloud.nacos.discovery.password=nacos > ${JAVA_OUT} 2>&1 &
+    nohup java -jar -Xms850m -Xmn850m ${JAR_NAME} --spring.profiles.active=dev --spring.cloud.nacos.discovery.password=nacos > ${JAVA_OUT} 2>&1 &
     echo "started java process"
 }
 

@@ -2,9 +2,9 @@ FROM anapsix/alpine-java:8_server-jre_unlimited
 
 ENV TZ=Asia/Shanghai
 
-ENV JAVA_OPTS="-Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom"
+ENV JAVA_OPTS="-Xms128m -Xmx256m"
 
-ENV SPRING_OPTS="--spring.profiles.active=test"
+ENV SPRING_OPTS="--spring.profiles.active=dev"
 
 RUN ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
@@ -16,4 +16,4 @@ EXPOSE 5513
 
 ADD ./target/mall-v1-api-user.jar ./
 
-CMD java $JAVA_OPTS -jar mall-v1-api-user.jar $SPRING_OPTS
+CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTS -jar mall-v1-api-user.jar $SPRING_OPTS
