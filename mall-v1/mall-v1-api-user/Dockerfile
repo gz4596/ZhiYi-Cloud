@@ -24,4 +24,4 @@ ADD ./target/mall-v1-api-user.jar ./run.jar
 
 EXPOSE 80
 
-CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTS -jar run.jar --Dserver.port=80 $SPRING_OPTS
+CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTS -jar run.jar --server.port=80 $SPRING_OPTS
