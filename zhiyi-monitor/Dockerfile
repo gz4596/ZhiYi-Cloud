@@ -6,14 +6,22 @@ ENV JAVA_OPTS="-Xms128m -Xmx256m"
 
 ENV SPRING_OPTS="--spring.profiles.active=dev"
 
+ENV NACOS_HOST="127.0.0.1"
+
+ENV NACOS_PORT="8848"
+
+ENV NACOS_USER="nacos"
+
+ENV NACOS_PASS="nacos"
+
 RUN ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN mkdir -p /project
 
 WORKDIR /project
 
-EXPOSE 6222
-
 ADD ./target/zhiyi-monitor.jar ./run.jar
 
-CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTS -jar run.jar $SPRING_OPTS
+EXPOSE 80
+
+CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTS -jar run.jar --Dserver.port=80 $SPRING_OPTS
