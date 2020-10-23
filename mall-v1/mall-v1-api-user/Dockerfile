@@ -14,6 +14,6 @@ WORKDIR /project
 
 EXPOSE 5513
 
-ADD ./target/mall-v1-api-user.jar ./
+ADD ./target/mall-v1-api-user.jar ./run.jar
 
-CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTS -jar mall-v1-api-user.jar $SPRING_OPTS
+CMD java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTS -jar run.jar $SPRING_OPTS
