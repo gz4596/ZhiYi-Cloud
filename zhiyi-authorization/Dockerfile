@@ -6,9 +6,7 @@ ENV JAVA_OPTS="-Xms128m -Xmx256m"
 
 ENV SPRING_OPTS="--spring.profiles.active=dev"
 
-ENV NACOS_HOST="127.0.0.1"
-
-ENV NACOS_PORT="8848"
+ENV NACOS_HOST="127.0.0.1:8848"
 
 ENV NACOS_USER="nacos"
 
