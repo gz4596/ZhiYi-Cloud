@@ -3,8 +3,7 @@ package com.github.taoroot.cloud.common.security.social;
 
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 
-public interface SocialLoginHandler {
-
+public interface SocialUserHandler {
 
     Boolean checkParams(String code, String redirectUri);
 
@@ -14,6 +13,9 @@ public interface SocialLoginHandler {
 
     AuthUserInfo loadAuthUserInfo(SocialUser socialUser);
 
-    AuthUserInfo handle(String code, String redirectUri);
+    String bindAuthUserInfo(SocialUser socialUser);
 
+    AuthUserInfo login(String code, String redirectUri);
+
+    String bind(String code, String redirectUri);
 }

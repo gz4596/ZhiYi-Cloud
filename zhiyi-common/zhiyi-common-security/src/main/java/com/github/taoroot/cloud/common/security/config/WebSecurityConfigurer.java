@@ -1,5 +1,6 @@
 package com.github.taoroot.cloud.common.security.config;
 
+import com.github.taoroot.cloud.common.security.exception.SecurityExceptionHandler;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.annotation.PermitAll;
 import com.github.taoroot.cloud.common.security.filter.PermitAllValidateFilter;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -18,6 +20,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +39,7 @@ import java.util.Map;
 @Log4j2
 @EnableConfigurationProperties({SecurityIgnoreProperties.class, TenantDataSourceProperties.class})
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Import({TenantContextHolderFilter.class})
+@Import({TenantContextHolderFilter.class, SecurityExceptionHandler.class})
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     private final SecurityIgnoreProperties securityIgnoreProperties;
@@ -102,5 +106,10 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 httpSecurity.requestMatchers().antMatchers(item);
             }
         });
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

@@ -7,6 +7,7 @@ import com.github.taoroot.cloud.common.core.datascope.EnableScope;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminMenu;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminRole;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
+import com.github.taoroot.cloud.mall.v1.common.entity.AdminUserSocial;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,6 +27,8 @@ public interface UserMapper extends BaseMapper<AdminUser> {
     List<String> roleNames(@Param("userId") Integer userId);
 
     List<AdminMenu> menus(@Param("userId") Integer userId, @Param("type") Integer type);
+
+    List<AdminUserSocial> socials(@Param("userId") Integer userId);
 
     List<String> authorityNames(@Param("userId") Integer userId);
 

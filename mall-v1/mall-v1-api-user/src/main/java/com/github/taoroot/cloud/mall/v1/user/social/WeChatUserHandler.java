@@ -2,7 +2,7 @@ package com.github.taoroot.cloud.mall.v1.user.social;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
-import com.github.taoroot.cloud.common.security.social.AbstractSocialLoginHandler;
+import com.github.taoroot.cloud.common.security.social.AbstractSocialUserHandler;
 import com.github.taoroot.cloud.common.security.social.SocialUser;
 import com.github.taoroot.cloud.mall.v1.common.entity.MallUser;
 import com.github.taoroot.cloud.mall.v1.user.mapper.UserMapper;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 @Component("WX")
 @AllArgsConstructor
-public class WeChatLoginHandler extends AbstractSocialLoginHandler {
+public class WeChatUserHandler extends AbstractSocialUserHandler {
     private final WxMpService wxMpService;
     private final UserMapper userMapper;
     private final static ThreadLocal<WxMpOAuth2AccessToken> tokenThreadLocal = new ThreadLocal<>();
@@ -72,5 +72,10 @@ public class WeChatLoginHandler extends AbstractSocialLoginHandler {
         authUserInfo.setNickname(user.getNickname());
         authUserInfo.setAuthorities(new String[]{"ROLE_USER"});
         return authUserInfo;
+    }
+
+    @Override
+    public String bindAuthUserInfo(SocialUser socialUser) {
+        return null;
     }
 }

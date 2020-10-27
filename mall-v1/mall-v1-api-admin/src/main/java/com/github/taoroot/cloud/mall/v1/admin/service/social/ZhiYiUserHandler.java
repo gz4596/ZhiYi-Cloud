@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.taoroot.cloud.common.core.constant.SecurityConstants;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
-import com.github.taoroot.cloud.common.security.social.AbstractSocialLoginHandler;
+import com.github.taoroot.cloud.common.security.social.AbstractSocialUserHandler;
 import com.github.taoroot.cloud.common.security.social.SocialType;
 import com.github.taoroot.cloud.common.security.social.SocialUser;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.SocialDetailsMapper;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Log4j2
 @Component(SocialType.ZHIYI)
 @AllArgsConstructor
-public class ZhiYiLoginHandler extends AbstractSocialLoginHandler {
+public class ZhiYiUserHandler extends AbstractSocialUserHandler {
     private final UserMapper userMapper;
     private final SocialDetailsMapper socialDetailsMapper;
     private final RestTemplate restTemplate;
@@ -73,6 +73,11 @@ public class ZhiYiLoginHandler extends AbstractSocialLoginHandler {
         authUserInfo.setNickname(user.getNickname());
         authUserInfo.setAuthorities(new String[]{"ROLE_USER"});
         return authUserInfo;
+    }
+
+    @Override
+    public String bindAuthUserInfo(SocialUser socialUser) {
+        return null;
     }
 
 }

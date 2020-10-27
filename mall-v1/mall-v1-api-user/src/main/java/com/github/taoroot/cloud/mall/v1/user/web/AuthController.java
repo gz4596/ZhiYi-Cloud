@@ -3,7 +3,7 @@ package com.github.taoroot.cloud.mall.v1.user.web;
 import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.annotation.PermitAll;
-import com.github.taoroot.cloud.common.security.social.SocialLoginHandler;
+import com.github.taoroot.cloud.common.security.social.SocialUserHandler;
 import com.github.taoroot.cloud.mall.v1.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class AuthController {
 
-    private final Map<String, SocialLoginHandler> socialLoginHandler;
+    private final Map<String, SocialUserHandler> socialUserHandlerMap;
     private final UserService userService;
 
     /**
@@ -33,15 +33,15 @@ public class AuthController {
     @GetMapping(value = "/auth/social")
     public R<AuthUserInfo> userInfoBySocial(String type, String code,
                                             @RequestParam(required = false, value = "redirect_uri") String redirectUri) {
-        SocialLoginHandler socialLoginHandler = this.socialLoginHandler.get(type.toLowerCase());
-        if (socialLoginHandler == null) {
-            socialLoginHandler = this.socialLoginHandler.get(type.toUpperCase());
+        SocialUserHandler socialUserHandler = this.socialUserHandlerMap.get(type.toLowerCase());
+        if (socialUserHandler == null) {
+            socialUserHandler = this.socialUserHandlerMap.get(type.toUpperCase());
         }
-        if (socialLoginHandler == null) {
-            log.error("SocialLoginHandler 不存在 {}", type);
+        if (socialUserHandler == null) {
+            log.error("不支持当前社交账号 {}", type);
             return R.errMsg(type + " 不存在");
         }
-        return R.ok(socialLoginHandler.handle(code, redirectUri));
+        return R.ok(socialUserHandler.login(code, redirectUri));
     }
 
     @ApiOperation("获取用户信息")

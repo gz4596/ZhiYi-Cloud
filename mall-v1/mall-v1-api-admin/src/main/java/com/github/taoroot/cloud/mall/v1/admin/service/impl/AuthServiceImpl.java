@@ -10,18 +10,20 @@ import com.github.taoroot.cloud.common.core.vo.AuthSocialInfo;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.tenant.TenantContextHolder;
-import com.github.taoroot.cloud.mall.v1.admin.mapper.DeptMapper;
-import com.github.taoroot.cloud.mall.v1.admin.mapper.SocialDetailsMapper;
-import com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper;
-import com.github.taoroot.cloud.mall.v1.admin.mapper.UserRoleMapper;
+import com.github.taoroot.cloud.mall.v1.admin.mapper.*;
 import com.github.taoroot.cloud.mall.v1.admin.service.AuthService;
 import com.github.taoroot.cloud.mall.v1.admin.service.UserRoleService;
+import com.github.taoroot.cloud.mall.v1.admin.service.UserService;
+import com.github.taoroot.cloud.mall.v1.admin.service.UserSocialService;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminMenu;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminSocialDetails;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
+import com.github.taoroot.cloud.mall.v1.common.entity.AdminUserSocial;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -36,10 +38,14 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService {
 
     private final UserMapper userMapper;
+    private final UserService userService;
     private final UserRoleService userRoleService;
     private final UserRoleMapper userRoleMapper;
     private final DeptMapper deptMapper;
     private final SocialDetailsMapper socialDetailsMapper;
+    private final UserSocialService userSocialService;
+    private final UserSocialMapper userSocialMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public R<Object> userInfo() {
@@ -75,6 +81,8 @@ public class AuthServiceImpl implements AuthService {
             meta.put("breadcrumb", treeNode.getBreadcrumb());
             tree.putExtra("meta", meta);
         }));
+        // 社交账号
+        result.put("socials", userMapper.socials(userId));
         return R.ok(result);
     }
 
@@ -97,8 +105,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public List<AuthSocialInfo> socials(String redirectUrl, Boolean isProxy) {
-        List<AdminSocialDetails> adminSocialDetails = socialDetailsMapper.selectList(Wrappers.emptyWrapper());
+    public List<AuthSocialInfo> socials(String redirectUrl, Boolean isProxy, String type) {
+        List<AdminSocialDetails> adminSocialDetails = socialDetailsMapper.selectList(Wrappers.<AdminSocialDetails>lambdaQuery()
+                .eq(!StringUtils.isEmpty(type), AdminSocialDetails::getType, type));
         return adminSocialDetails.stream().map(social -> {
             String authorizeUri;
             String redirectUri = String.format(social.getAuthorizeUri(), social.getAppId(), redirectUrl, IdUtil.fastSimpleUUID());
@@ -126,6 +135,27 @@ public class AuthServiceImpl implements AuthService {
             socialInfo.setIcon(social.getIcon());
             return socialInfo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public R<String> unbind(Integer id) {
+        boolean remove = userSocialService.remove(Wrappers.<AdminUserSocial>lambdaQuery()
+                .eq(AdminUserSocial::getId, id)
+                .eq(AdminUserSocial::getAdminUserId, SecurityUtils.userId())
+        );
+        Assert.isTrue(remove, "删除失败");
+        return R.okMsg("删除成功");
+    }
+
+    @Override
+    public R<String> updatePass(String oldPass, String newPass) {
+        AdminUser user = userService.getById(SecurityUtils.userId());
+        String password = user.getPassword();
+        boolean matches = passwordEncoder.matches(oldPass, password);
+        Assert.isTrue(matches, "密码错误");
+        user.setPassword(passwordEncoder.encode(newPass));
+        Assert.isTrue(userService.updateById(user), "未知原因,更新失败");
+        return R.okMsg("更新成功");
     }
 
     public static String buildFullRequestUrl(String scheme, String serverName,

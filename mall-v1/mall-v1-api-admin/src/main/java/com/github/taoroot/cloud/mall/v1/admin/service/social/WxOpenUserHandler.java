@@ -2,12 +2,14 @@ package com.github.taoroot.cloud.mall.v1.admin.service.social;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
-import com.github.taoroot.cloud.common.security.social.AbstractSocialLoginHandler;
+import com.github.taoroot.cloud.common.security.SecurityUtils;
+import com.github.taoroot.cloud.common.security.social.AbstractSocialUserHandler;
 import com.github.taoroot.cloud.common.security.social.SocialType;
 import com.github.taoroot.cloud.common.security.social.SocialUser;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.SocialDetailsMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserSocialMapper;
+import com.github.taoroot.cloud.mall.v1.admin.service.UserSocialService;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminSocialDetails;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUserSocial;
@@ -20,6 +22,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -29,10 +32,11 @@ import java.util.Map;
 @Log4j2
 @Component(SocialType.WX_OPEN)
 @AllArgsConstructor
-public class WxOpenLoginHandler extends AbstractSocialLoginHandler {
+public class WxOpenUserHandler extends AbstractSocialUserHandler {
     private final UserMapper userMapper;
     private final SocialDetailsMapper socialDetailsMapper;
     private final UserSocialMapper userSocialMapper;
+    private final UserSocialService userSocialService;
 
     @Override
     public String getToken(String code, String redirectUri) {
@@ -81,6 +85,33 @@ public class WxOpenLoginHandler extends AbstractSocialLoginHandler {
         authUserInfo.setNickname(user.getNickname());
         authUserInfo.setAuthorities(new String[]{"ROLE_USER"});
         return authUserInfo;
+    }
+
+    @Override
+    public String bindAuthUserInfo(SocialUser socialUser) {
+        // 检查当前社交账号有无已被绑定
+        // 检查当前当前用户有无当前类型的社交账号绑定
+        AdminUserSocial userSocial = userSocialMapper.selectOne(Wrappers.<AdminUserSocial>lambdaQuery()
+                .eq(AdminUserSocial::getSocialType, SocialType.WX_OPEN)
+                .eq(AdminUserSocial::getSocialId, socialUser.getName()));
+
+        Assert.isNull(userSocial, "该社交账号已有绑定,请先解绑");
+
+        Integer userId = SecurityUtils.userId();
+        userSocial = userSocialMapper.selectOne(Wrappers.<AdminUserSocial>lambdaQuery()
+                .eq(AdminUserSocial::getSocialType, SocialType.WX_OPEN)
+                .eq(AdminUserSocial::getAdminUserId, userId));
+
+        Assert.isNull(userSocial, "当前账号已有绑定社交账号,请先解绑当前社交账号");
+
+        userSocial = new AdminUserSocial();
+        userSocial.setAdminUserId(userId);
+        userSocial.setSocialAvatar(socialUser.getAvatar());
+        userSocial.setSocialId(socialUser.getName());
+        userSocial.setSocialNickname(socialUser.getNickname());
+
+        Assert.isTrue(userSocialService.save(userSocial), "未知原因,绑定失败");
+        return "绑定成功";
     }
 
     public static class WxMappingJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {

@@ -55,6 +55,13 @@
         )
     </select>
 
+    <select id="socials" resultType="com.github.taoroot.cloud.mall.v1.common.entity.AdminUserSocial">
+        select us.id, social_nickname, social_avatar, sd.name as socialName, sd.icon, sd.type as socialType
+        from admin_social_details sd
+           left join admin_user_social us on us.social_type = sd.type
+                                         and us.admin_user_id = #{userId}
+    </select>
+
 
     <select id="authorityNames" resultType="java.lang.String">
     select a.authority

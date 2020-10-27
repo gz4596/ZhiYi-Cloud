@@ -11,5 +11,9 @@ public interface AuthService {
 
     AuthUserInfo authByUsername(String username);
 
-    List<AuthSocialInfo> socials(String redirectUrl, Boolean isProxy);
+    List<AuthSocialInfo> socials(String redirectUrl, Boolean isProxy, String type);
+
+    R<String> unbind(Integer id);
+
+    R updatePass(String oldPass, String newPass);
 }
