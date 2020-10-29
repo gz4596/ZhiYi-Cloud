@@ -1,5 +1,6 @@
 package com.github.taoroot.cloud.mall.v1.user.web;
 
+import cn.hutool.core.lang.Assert;
 import com.github.taoroot.cloud.common.core.utils.R;
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 import com.github.taoroot.cloud.common.security.annotation.PermitAll;
@@ -34,13 +35,7 @@ public class AuthController {
     public R<AuthUserInfo> userInfoBySocial(String type, String code,
                                             @RequestParam(required = false, value = "redirect_uri") String redirectUri) {
         SocialUserHandler socialUserHandler = this.socialUserHandlerMap.get(type.toLowerCase());
-        if (socialUserHandler == null) {
-            socialUserHandler = this.socialUserHandlerMap.get(type.toUpperCase());
-        }
-        if (socialUserHandler == null) {
-            log.error("不支持当前社交账号 {}", type);
-            return R.errMsg(type + " 不存在");
-        }
+        Assert.notNull(socialUserHandler, "不支持当前社交");
         return R.ok(socialUserHandler.login(code, redirectUri));
     }
 

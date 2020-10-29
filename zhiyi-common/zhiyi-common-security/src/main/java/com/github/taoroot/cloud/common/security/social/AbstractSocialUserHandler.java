@@ -2,6 +2,8 @@ package com.github.taoroot.cloud.common.security.social;
 
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 
+import java.util.Map;
+
 public abstract class AbstractSocialUserHandler implements SocialUserHandler {
 
     @Override
@@ -30,7 +32,7 @@ public abstract class AbstractSocialUserHandler implements SocialUserHandler {
             return null;
         }
 
-        String token = getToken(code, redirectUri);
+        Map<String, Object> token = getToken(code, redirectUri);
 
         if (token == null) {
             return null;

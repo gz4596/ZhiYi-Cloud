@@ -3,13 +3,15 @@ package com.github.taoroot.cloud.common.security.social;
 
 import com.github.taoroot.cloud.common.core.vo.AuthUserInfo;
 
+import java.util.Map;
+
 public interface SocialUserHandler {
 
     Boolean checkParams(String code, String redirectUri);
 
-    String getToken(String code, String redirectUri);
+    Map<String, Object> getToken(String code, String redirectUri);
 
-    SocialUser loadSocialUser(String token);
+    SocialUser loadSocialUser(Map<String, Object> token);
 
     AuthUserInfo loadAuthUserInfo(SocialUser socialUser);
 

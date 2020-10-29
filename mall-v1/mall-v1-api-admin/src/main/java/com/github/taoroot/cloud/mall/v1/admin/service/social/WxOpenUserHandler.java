@@ -6,13 +6,13 @@ import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.social.AbstractSocialUserHandler;
 import com.github.taoroot.cloud.common.security.social.SocialType;
 import com.github.taoroot.cloud.common.security.social.SocialUser;
-import com.github.taoroot.cloud.mall.v1.admin.mapper.SocialDetailsMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserSocialMapper;
 import com.github.taoroot.cloud.mall.v1.admin.service.UserSocialService;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminSocialDetails;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUserSocial;
+import com.github.taoroot.cloud.mall.v1.common.mapper.SocialDetailsMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.ParameterizedTypeReference;
@@ -39,10 +39,10 @@ public class WxOpenUserHandler extends AbstractSocialUserHandler {
     private final UserSocialService userSocialService;
 
     @Override
-    public String getToken(String code, String redirectUri) {
+    public Map<String, Object> getToken(String code, String redirectUri) {
         AdminSocialDetails socialDetails = socialDetailsMapper
                 .selectOne(Wrappers.<AdminSocialDetails>lambdaQuery().eq(AdminSocialDetails::getType, SocialType.WX_OPEN));
-        String uri = String.format(SocialType.WX_OPEN_ACCESS_TOKEN_URL,
+        String uri = String.format(SocialType.WX_OAUTH2_ACCESS_TOKEN_URL,
                 socialDetails.getAppId(),
                 socialDetails.getAppSecret(), code);
         RestTemplate restTemplate = new RestTemplate();
@@ -54,17 +54,14 @@ public class WxOpenUserHandler extends AbstractSocialUserHandler {
 
         log.debug("{}:{} --> {}", SocialType.WX_OPEN, code, body);
 
-        if (body == null) {
-            return "-1";
-        }
-
-        return (String) body.get("openid");
+        return body;
     }
 
     @Override
-    public SocialUser loadSocialUser(String openId) {
+    public SocialUser loadSocialUser(Map<String, Object> body) {
+        String openid = (String) body.get("openid");
         SocialUser socialUser = new SocialUser();
-        socialUser.setUsername(openId);
+        socialUser.setUsername(openid);
         return socialUser;
     }
 

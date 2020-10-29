@@ -8,10 +8,10 @@ import com.github.taoroot.cloud.common.security.SecurityUtils;
 import com.github.taoroot.cloud.common.security.social.AbstractSocialUserHandler;
 import com.github.taoroot.cloud.common.security.social.SocialType;
 import com.github.taoroot.cloud.common.security.social.SocialUser;
-import com.github.taoroot.cloud.mall.v1.admin.mapper.SocialDetailsMapper;
 import com.github.taoroot.cloud.mall.v1.admin.mapper.UserMapper;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminSocialDetails;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
+import com.github.taoroot.cloud.mall.v1.common.mapper.SocialDetailsMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.ParameterizedTypeReference;
@@ -36,7 +36,7 @@ public class ZhiYiUserHandler extends AbstractSocialUserHandler {
     }
 
     @Override
-    public String getToken(String code, String redirectUri) {
+    public Map<String, Object> getToken(String code, String redirectUri) {
         AdminSocialDetails socialDetails = socialDetailsMapper
                 .selectOne(Wrappers.<AdminSocialDetails>lambdaQuery().eq(AdminSocialDetails::getType, SocialType.ZHIYI));
         String uri = String.format(SocialType.ZHIYI_ACCESS_TOKEN_URL,
@@ -50,18 +50,14 @@ public class ZhiYiUserHandler extends AbstractSocialUserHandler {
                 .getBody();
         log.debug("{}:{} --> {}", SocialType.ZHIYI, code, body);
 
-        if (body == null) {
-            return null;
-        }
-
-        return (String) body.get(SecurityConstants.USER_ID);
+        return body;
     }
 
 
     @Override
-    public SocialUser loadSocialUser(String token) {
+    public SocialUser loadSocialUser(Map<String, Object> token) {
         SocialUser socialUser = new SocialUser();
-        socialUser.setUsername(token);
+        socialUser.setUsername((String) token.get(SecurityConstants.USER_ID));
         return socialUser;
     }
 

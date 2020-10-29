@@ -1,4 +1,4 @@
-package com.github.taoroot.cloud.mall.v1.user.social;
+package com.github.taoroot.cloud.mall.v1.user.service.social;
 
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.junit.jupiter.api.Test;

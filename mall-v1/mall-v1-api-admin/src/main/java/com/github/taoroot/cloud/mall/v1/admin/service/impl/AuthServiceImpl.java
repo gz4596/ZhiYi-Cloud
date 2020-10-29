@@ -19,6 +19,7 @@ import com.github.taoroot.cloud.mall.v1.common.entity.AdminMenu;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminSocialDetails;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUser;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminUserSocial;
+import com.github.taoroot.cloud.mall.v1.common.mapper.SocialDetailsMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;

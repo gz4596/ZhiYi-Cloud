@@ -1,4 +1,4 @@
-package com.github.taoroot.cloud.mall.v1.admin.mapper;
+package com.github.taoroot.cloud.mall.v1.common.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.taoroot.cloud.mall.v1.common.entity.AdminSocialDetails;

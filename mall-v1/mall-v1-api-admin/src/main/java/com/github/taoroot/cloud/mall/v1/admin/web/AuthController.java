@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -63,10 +64,7 @@ public class AuthController {
     public R<AuthUserInfo> userInfoBySocial(String type, String code,
                                             @RequestParam(required = false, value = "redirect_uri") String redirectUri) {
         SocialUserHandler socialUserHandler = this.socialUserHandlerMap.get(type.toUpperCase());
-        if (socialUserHandler == null) {
-            log.error("不支持当前社交账号登录 {}", type);
-            return R.errMsg(type + " 不存在");
-        }
+        Assert.notNull(socialUserHandler, "不支持登录类型");
         return R.ok(socialUserHandler.login(code, redirectUri));
     }
 
@@ -88,10 +86,7 @@ public class AuthController {
     public R<String> socialBind(String type, String code,
                                 @RequestParam(required = false, value = "redirect_uri") String redirectUri) {
         SocialUserHandler socialUserHandler = this.socialUserHandlerMap.get(type.toUpperCase());
-        if (socialUserHandler == null) {
-            log.error("不支持当前社交账号绑定 {}", type);
-            return R.errMsg(type + " 不存在");
-        }
+        Assert.notNull(socialUserHandler, "不支持登录类型");
         return R.okMsg(socialUserHandler.bind(code, redirectUri));
     }
 
