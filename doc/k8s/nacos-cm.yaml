@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nacos-cm
+  namespace: zhiyi-cloud
+data:
+  nacos.host: "nacos-svc:8848"
+  nacos.user: "nacos"
+  nacos.pass: "nacos"
+  mysql.host: "192.168.31.222"
+  mysql.db.name: "zhiyi-cloud-config"
+  mysql.port: "3306"
+  mysql.user: "root"
+  mysql.password: "root"

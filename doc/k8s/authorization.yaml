@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zhiyi-authorization-svc
+  namespace: zhiyi-cloud
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    tier: zhiyi-authorization
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: authorization-web
+  namespace: zhiyi-cloud
+spec:
+  rules:
+  - host: "auth.zhiyi.zone"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: zhiyi-authorization-svc
+            port:
+              number: 80
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zhiyi-authorization
+  namespace: zhiyi-cloud
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: zhiyi-authorization
+  template:
+    metadata:
+      labels:
+        tier: zhiyi-authorization
+    spec:
+      containers:
+      - name: zhiyi-authorization
+        image: registry.cn-shanghai.aliyuncs.com/zhiyi-cloud/zhiyi-authorization:1.0
+        imagePullPolicy: Always
+        env:
+          - name: "SPRING_OPTS"
+            value: "--spring.profiles.active=test"
+          - name: "NACOS_HOST"
+            valueFrom:
+              configMapKeyRef:
+                name: nacos-cm
+                key: nacos.host
+          - name: "NACOS_USER"
+            valueFrom:
+              configMapKeyRef:
+                name: nacos-cm
+                key: nacos.user
+          - name: "NACOS_PASS"
+            valueFrom:
+              configMapKeyRef:
+                name: nacos-cm
+                key: nacos.pass
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /actuator/health
+          initialDelaySeconds: 1
+          periodSeconds: 3

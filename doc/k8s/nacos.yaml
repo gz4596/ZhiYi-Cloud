@@ -1,0 +1,161 @@
+# 内部连接
+apiVersion: v1
+kind: Service
+metadata:
+  name: nacos-svc
+  namespace: zhiyi-cloud 
+  labels:
+    app: nacos-svc
+spec:
+  ports:
+    - port: 8848
+      name: server
+      targetPort: 8848
+    - port: 7848
+      name: rpc
+      targetPort: 7848
+  selector:
+    app: nacos
+---
+
+# Web 访问 5 层代理
+apiVersion: v1
+kind: Service
+metadata:
+  name: nacos-service
+  namespace: zhiyi-cloud
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: "true"
+    nginx.ingress.kubernetes.io/session-cookie-name: backend
+    nginx.ingress.kubernetes.io/load-balancer-method: drr
+spec:
+  selector:
+    app: nacos
+  ports:
+  - name: web
+    port: 80
+    targetPort: 8848
+---
+
+# Web 访问 7 层代理
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nacos-web
+  namespace: zhiyi-cloud
+spec:
+  rules:
+  - host: "nacos.zhiyi.zone"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: nacos-service
+            port:
+              number: 80
+
+# 有状态
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nacos
+  namespace: zhiyi-cloud
+spec:
+  serviceName: nacos-svc
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nacos
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                      - nacos-svc
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: k8snacos
+          imagePullPolicy: Always
+          image: registry.cn-shanghai.aliyuncs.com/zhiyi-cloud/nacos:latest
+          readinessProbe:
+            httpGet:
+              port: 8848
+              path: /nacos/index.html
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              port: 8848
+              path: /nacos/index.html
+            initialDelaySeconds: 50
+            periodSeconds: 3
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "800Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8848
+              name: client
+            - containerPort: 7848
+              name: rpc
+          env:
+            - name: JVM_XMS
+              value: "512m"
+            - name: JVM_XMX
+              value: "512m"
+            - name: JVM_XMN
+              value: "256m"
+            - name: JVM_MS
+              value: "64m"
+            - name: JVM_MMS
+              value: "128m"
+            - name: NACOS_REPLICAS
+              value: "3"
+            - name: MYSQL_SERVICE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: nacos-cm
+                  key: mysql.host
+            - name: MYSQL_SERVICE_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: nacos-cm
+                  key: mysql.db.name
+            - name: MYSQL_SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: nacos-cm
+                  key: mysql.port
+            - name: MYSQL_SERVICE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: nacos-cm
+                  key: mysql.user
+            - name: MYSQL_SERVICE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: nacos-cm
+                  key: mysql.password
+            - name: MODE
+              value: "cluster"
+            - name: NACOS_SERVER_PORT
+              value: "8848"
+            - name: PREFER_HOST_MODE
+              value: "hostname"
+            - name: NACOS_SERVERS
+              value: "nacos-0.nacos-svc.zhiyi-cloud.svc.cluster.local:8848 nacos-1.nacos-svc.zhiyi-cloud.svc.cluster.local:8848 nacos-2.nacos-svc.zhiyi-cloud.svc.cluster.local:8848"
+  selector:
+    matchLabels:
+      app: nacos
